@@ -1,3 +1,11 @@
+html, body
+{
+    max-width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    background-color: rgb(44, 43, 43);
+}
+
 h1
 {
     text-align: center;
@@ -11,23 +19,17 @@ h1
     width: 100%;
 }
 
-h2
-{
-    text-align: center;
-    font-family: monospace;
-    font-size: 30pt;
-    position: relative; top: -60px;
-}
-
 h3
 {
     width: 20%;
     text-align: center;
-    position: relative; top: -20px;
+    position: relative; top: -77.5px;
     font-size: 28pt;
     font-family: monospace;
-    margin: 0px;
+    padding-top: 30px;
+    padding-bottom: 30px;
     color: rgb(32, 134, 32);
+    background-color: rgb(44, 43, 43);
 }
 
 .menu button
@@ -42,6 +44,7 @@ h3
     color: white;
     background-color: rgb(44, 43, 43);
     transition-duration: 0.3s;
+    position: relative; bottom: 116px;
 }
 
 .menu button:hover
