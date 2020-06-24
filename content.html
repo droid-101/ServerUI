@@ -3,19 +3,23 @@
 <html>
     <Title>Minecraft Server</Title>
     <head>
+        <script type="text/javascript" src="menu.js"></script>
         <link rel="stylesheet" href="WebpageStyling.css">
         <h1>
             MINECRAFT SERVER
         </h1>
-        <h3>
+        <h2>
             MENU
+        </h2>
+        <nav class = "menu">
+            <button onclick = "button('HOME')">Home</button>
+            <button onclick = "button('CONTROLS')">Controls</button>
+            <button onclick = "button('WORLDS')">Worlds</button>
+            <button onclick = "button('TERMINAL')">Terminal</button>
+            <button onclick = "button('HELP')">Help</button>
+        </nav>
+        <h3 id = "subtitle">
+            HOME
         </h3>
-        <section class = "menu">
-            <button>Home</button>
-            <button>Controls</button>
-            <button>Worlds</button>
-            <button>Terminal</button>
-            <button>Help</button>
-        </section>
     </head>
 </html>
