@@ -9,3 +9,15 @@ function switchTab(name)
 
 	document.getElementById(name).style.display = "block";
 }
+
+function press(action)
+{
+	var animation = document.getElementsByClassName(action)[0];
+	animation.src = "icons/buttons/" + action + "-pressed.png";
+}
+
+function release(action)
+{
+	var animation = document.getElementsByClassName(action)[0];
+	animation.src = "icons/buttons/" + action + "-released.png";
+}

@@ -1,9 +1,70 @@
+html, body
+{
+	margin: 0;
+}
+
+.header
+{
+	flex-direction: row;
+	background-color: black;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+}
+
+.title
+{
+	margin: auto;
+	font-weight: 700;
+	font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+	color: rgb(255, 255, 255);
+	font-size: 40pt;
+	text-align: center;
+}
+
+.controls
+{
+	margin: auto;
+	display: flex;
+	flex-direction: row;
+	width: 17.5%;
+	flex-wrap: nowrap;
+	background-color: black;
+}
+
+.start
+{
+	margin: auto;
+}
+
+.stop
+{
+	margin: auto;
+}
+
+.restart
+{
+	margin: auto;
+}
+
+.status
+{
+	margin: auto;
+	font-size: 20pt;
+	font-family: monospace;
+	font-weight: 700;
+	color: rgb(22, 158, 22);
+}
+
 .menu
 {
 	height: 100%;
-	width: 180px;
+	width: 200px;
 	position: fixed;
-	top: 0;
 	left: 0;
 	background-color: rgb(34, 34, 34);
 	overflow-x: hidden;
@@ -11,10 +72,10 @@
 
 .menu button
 {
-	font-size: 18pt;
+	font-size: 20pt;
 	display: block;
-	padding: 20px;
-	width: 180px;
+	padding: 24px;
+	width: 200px;
 	border: none;
 	font-family: monospace;
 	font-weight: 700;
@@ -26,10 +87,14 @@
 
 .menu button:hover
 {
-	background-color: rgb(19, 122, 19);
+	background-color: rgb(42, 133, 42);
 }
 
 .main
 {
-	padding: 0px 180px;
+	font-size: 20pt;
+	font-family: monospace;
+	font-weight: 700;
+	width: 70%;
+	position: relative; left: 250px;
 }

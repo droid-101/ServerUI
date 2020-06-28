@@ -8,8 +8,25 @@
 	<link rel='stylesheet' href='style.css'>
 </head>
 
+<div class='header'>
+	<span class='status'>
+		Server Offline
+	</span>
+
+	<span class="title">
+		MINECRAFT SERVER
+	</span>
+	<span class="controls">
+		<input type='image' src="icons/buttons/start-released.png" class="start" width="50" height="50" onmousedown="press('start')" onmouseup="release('start')"></button>
+		<input type='image' src="icons/buttons/stop-released.png" class="stop" width="50" height="50" onmousedown="press('stop')" onmouseup="release('stop')"></button>
+		<input type='image' src="icons/buttons/restart-released.png" class="restart" width="50" height="50" onmousedown="press('restart')" onmouseup="release('restart')"></button>
+	</span>
+</div>
+
 <body onload='switchTab("dashboard")'>
+
 	<div class='menu'>
+		<button onclick='switchTab("home")'>Home</button>
 		<button onclick='switchTab("dashboard")'>Dashboard</button>
 		<button onclick='switchTab("players")'>Players</button>
 		<button onclick='switchTab("settings")'>Settings</button>
@@ -18,6 +35,10 @@
 	</div>
 
 	<div class='main'>
+
+		<div class='tab' id='home'>
+			<br>Note: This is a private server!
+		</div>
 
 		<div class='tab' id='dashboard'>
 			<br>This is the dashboard tab.
