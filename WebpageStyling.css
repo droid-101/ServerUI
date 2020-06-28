@@ -1,7 +1,9 @@
 html, body
 {
     max-width: 100%;
+    max-height: 100%;
     overflow-x: hidden;
+    overflow-y: hidden;
     margin: 0;
     background-color: rgb(44, 43, 43);
 }
@@ -10,7 +12,7 @@ h1
 {
     text-align: center;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    font-size: 40pt;
+    font-size: 50pt;
     background-color: black;
     color: white;
     padding: 25px;
@@ -23,7 +25,7 @@ h2
 {
     width: 20%;
     text-align: center;
-    position: relative; top: -76px;
+    position: relative; top: -85px;
     font-size: 28pt;
     font-family: monospace;
     padding-top: 30px;
@@ -58,5 +60,14 @@ h3
     font-family: monospace;
     color: white;
     text-align: center;
-    position: relative; bottom: 755px;
+    position: relative; bottom: 780px;
+}
+
+body section
+{
+    color: white;
+    font-family: monospace;
+    text-align: center;
+    font-size: 32pt;
+    position: relative; bottom: 820px; left: 50px;
 }
