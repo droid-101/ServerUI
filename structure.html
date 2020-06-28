@@ -5,12 +5,52 @@
 <head>
 	<title>Minecraft Server</title>
 	<script src='scripts.js'></script>
+	<link rel='stylesheet' href='style.css'>
 </head>
 
-<body>
-	<p id="message">This is the default message</p>
-	<button onclick='setMessage("Button 1 Pressed")'>Button 1</button>
-	<button onclick='setMessage("Button 2 Pressed")'>Button 2</button>
+<body onload='switchTab("dashboard")'>
+	<div class='menu'>
+		<button onclick='switchTab("dashboard")'>Dashboard</button>
+		<button onclick='switchTab("players")'>Players</button>
+		<button onclick='switchTab("settings")'>Settings</button>
+		<button onclick='switchTab("worlds")'>Worlds</button>
+		<button onclick='switchTab("terminal")'>Terminal</button>
+	</div>
+
+	<div class='main'>
+
+		<div class='tab' id='dashboard'>
+			<br>This is the dashboard tab.
+			<br>It will display stats about the server.
+			<br>This includes the player count, RAM usage, CPU usage and clock speed, etc.
+		</div>
+
+		<div class='tab' id='players'>
+			<br>This is the players tab.
+			<br>It will have settings to manage players, including the whitelist and blacklist.
+			<br>Sliders should be added to op and deop players as well as select their op level.
+			<br>This will edit ops.json
+		</div>
+
+		<div class='tab' id='settings'>
+			<br>This is the settings tab.
+			<br>It should provide fields to change the values in server.properties
+		</div>
+
+		<div class='tab' id='worlds'>
+			<br>This is the worlds tab.
+			<br>Players should be able to upload a zip file of their custom worlds.
+			<br>Already uploaded worlds should be displayed in a list and should be selectable.
+			<br>A server restart will need to take place.
+		</div>
+
+		<div class='tab' id='terminal'>
+			<br>This is the terminal tab.
+			<br>It will provide access to the server terminal and log.
+		</div>
+
+	</div>
+
 </body>
 
 </html>
