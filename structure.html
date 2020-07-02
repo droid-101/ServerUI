@@ -23,7 +23,7 @@
 	</span>
 </div>
 
-<body onload='switchTab("dashboard")'>
+<body onload='switchTab("home")'>
 
 	<div class='menu'>
 		<button onclick='switchTab("home")'>Home</button>
@@ -37,41 +37,59 @@
 	<div class='main'>
 
 		<div class='tab' id='home'>
-			<br>Note: This is a private server!
+			<div class="subtitle">
+				HOME
+			</div>
+			<p>Note: This is a private server!</p>
 		</div>
 
 		<div class='tab' id='dashboard'>
-			<br>This is the dashboard tab.
-			<br>It will display stats about the server.
-			<br>This includes the player count, RAM usage, CPU usage and clock speed, etc.
+			<div class="subtitle">
+				DASHBOARD
+			</div>
+			<p>This is the dashboard tab.</p>
+			<p>It will display stats about the server.</p>
+			<p>This includes the player count, RAM usage, CPU usage and clock speed, etc.</p>
 		</div>
 
 		<div class='tab' id='players'>
-			<br>This is the players tab.
-			<br>It will have settings to manage players, including the whitelist and blacklist.
-			<br>Sliders should be added to op and deop players as well as select their op level.
-			<br>This will edit ops.json
+			<div class="subtitle">
+				PLAYERS
+			</div>
+			<p>This is the players tab.</p>
+			<p>It will have settings to manage players, including the whitelist and blacklist.</p>
+			<p>Sliders should be added to op and deop players as well as select their op level.</p>
+			<p>This will edit ops.json</p>
 		</div>
 
 		<div class='tab' id='settings'>
-			<br>This is the settings tab.
-			<br>It should provide fields to change the values in server.properties
+			<div class="subtitle">
+				SETTINGS
+			</div>
+			<div id="properties">
+			<p>This is the settings tab.</p>
+			<p>It should provide fields to change the values in server.properties</p>
+			</div>
 		</div>
 
 		<div class='tab' id='worlds'>
-			<br>This is the worlds tab.
-			<br>Players should be able to upload a zip file of their custom worlds.
-			<br>Already uploaded worlds should be displayed in a list and should be selectable.
-			<br>A server restart will need to take place.
+			<div class="subtitle">
+				WORLDS
+			</div>
+			<p>This is the worlds tab.</p>
+			<p>Players should be able to upload a zip file of their custom worlds.</p>
+			<p>Already uploaded worlds should be displayed in a list and should be selectable.</p>
+			<p>A server restart will need to take place.</p>
 		</div>
 
 		<div class='tab' id='terminal'>
-			<br>This is the terminal tab.
-			<br>It will provide access to the server terminal and log.
+			<div class="subtitle">
+				TERMINAL
+			</div>
+			<p>This is the terminal tab.</p>
+			<p>It will provide access to the server terminal and log.</p>
 		</div>
-
 	</div>
-
 </body>
 
 </html>

@@ -6,7 +6,6 @@ function switchTab(name)
 	{
 		tabs[i].style.display = "none";
 	}
-
 	document.getElementById(name).style.display = "block";
 }
 
