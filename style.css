@@ -92,7 +92,7 @@ html, body
 	background-color: rgb(42, 133, 42);
 }
 
-.main
+.tab p
 {
 	font-size: 20pt;
 	font-family: monospace;
@@ -100,3 +100,15 @@ html, body
 	width: 70%;
 	position: relative; left: 250px;
 }
+
+.subtitle
+{
+	text-align: center;
+	font-size: 40pt;
+	font-family: monospace;
+	font-weight: bold;
+	width: 100%;
+	padding-top: 20px;
+}
+
+
