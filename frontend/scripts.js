@@ -10,7 +10,7 @@ function switchTab(name)
 	switch (name)
 	{
 		case "settings":
-		loadFile("http://firestorm.local:8080");
+		document.getElementById("settings").innerHTML = loadFile("http://firestorm.local:8080");
 		break;
 	}
 
@@ -20,13 +20,14 @@ function switchTab(name)
 function press(action)
 {
 	var animation = document.getElementsByClassName(action)[0];
-	animation.src = "icons/buttons/" + action + "-pressed.png";
+	animation.src = "../icons/buttons/" + action + "-pressed.png";
 }
 
 function release(action)
 {
 	var animation = document.getElementsByClassName(action)[0];
-	animation.src = "icons/buttons/" + action + "-released.png";
+	animation.src = "../icons/buttons/" + action + "-released.png";
+	sendData("http://firestorm.local:8080", action);
 }
 
 function loadFile(filePath)
@@ -42,4 +43,12 @@ function loadFile(filePath)
 			document.getElementById("settings").innerHTML = (request.response);
         }
 	}
+}
+
+function sendData(filePath, action)
+{
+	var request = new XMLHttpRequest();
+	request.open("POST", filePath);
+	request.setRequestHeader("Content-Type", "text/plain");
+	request.send(action);
 }

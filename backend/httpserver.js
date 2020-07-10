@@ -1,21 +1,90 @@
-var http = require("http")
+var http = require("http");
 var fs = require("fs");
-var server = http.createServer((function(request, response)
-{
-	response.setHeader("Access-Control-Allow-Origin", "*");
-	response.writeHead(200, {"Content-Type": "text/plain"});
+var spawn = require('child_process').spawn;
+var server;
 
-	fs.readFile("test.txt", function read(err, data)
+process.chdir("../../server");
+var website = http.createServer((function(request, response)
+{
+	if (request.method == "POST")
 	{
-	if (err)
-	{
-	throw err;
+		var command = '';
+		var body = '';
+		request.on('data', function(chunk)
+		{
+		return body += chunk.toString();
+		});
+
+		request.on('end', () => {
+
+			if (body == "start")
+			{
+				startServer();
+			}
+			else if (body == "stop")
+			{
+				stopServer();
+			}
+			else if (body == "restart")
+			{
+				restartServer();
+			}
+
+		response.end('ok');
+		});
 	}
 
-	const content = data;
+	if (request.method == "GET")
+	{
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.writeHead(200, {"Content-Type": "text/plain"});
 
-	response.end(content);
-	});
+		fs.readFile("../../server/server.properties", function read(err, data)
+		{
+		if (err)
+		{
+		throw err;
+		}
+
+		const content = data;
+
+		response.end(content);
+		});
+	}
 }));
 
-server.listen(8080);
+website.listen(8080);
+
+function startServer()
+{
+	server = spawn('java', ['-Xmx4096M', '-Xmx4096M', '-jar', 'server.jar', 'nogui']);
+	server.stdin.setEncoding('utf-8');
+
+	server.stdout.on('data', (data) => {
+	console.log(`stdout: ${data}`);
+	});
+
+	server.stderr.on('data', (data) => {
+	console.error(`stderr: ${data}`);
+	});
+
+	server.on('close', (code) => {
+	console.log(`Minecraft server stopped with exit code ${code})`);
+	});
+}
+
+function serverCommand(command)
+{
+	server.stdin.write(command + "\n");
+}
+
+function stopServer()
+{
+	serverCommand("/stop");
+}
+
+function restartServer()
+{
+	stopServer();
+	startServer();
+}
