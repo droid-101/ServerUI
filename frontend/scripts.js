@@ -20,10 +20,6 @@ function switchTab(name)
 			}
 		);
 	}
-	else if (name == "dashboard")
-	{
-		getStatus();
-	}
 
 	document.getElementById(name).style.display = "block";
 }
@@ -72,6 +68,7 @@ function sendData(data)
 	request.open("POST", SERVER_URL);
 	request.setRequestHeader("Content-Type", "text/plain");
 	request.send(data);
+	getStatus();
 }
 
 function getStatus()
@@ -94,7 +91,7 @@ function getStatus()
 				result = "ERROR";
 			}
 
-			document.getElementById("currentstat").innerHTML = result;
+			document.getElementById("status").innerHTML = result;
 		}
 	);
 }

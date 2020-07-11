@@ -56,6 +56,13 @@ function requestHandler(request, response)
 					{
 						throw err;
 					}
+					console.log(data.toString());
+					// you will need to manually convert the .properties string to json
+					// first split data.toString using "\n".
+					// then make each part of the resulting array an entry in the json string
+					// the equals sign will become a colon and the value on right side should have quotes.
+					// finally stringify json and write it in the response
+					data = propertiesToJSON(data.toString());
 
 					response.write(data);
 					response.end();
@@ -139,4 +146,9 @@ function restartServer()
 
 	stopServer();
 	startServer();
+}
+
+function propertiesToJSON(properties)
+{
+	// convert to json string here and return
 }
