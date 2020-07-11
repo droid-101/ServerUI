@@ -26,15 +26,15 @@ function requestHandler(request, response)
 				console.log(request.method, body);
 				if (body == "start")
 				{
-					// startServer();
+					startServer();
 				}
 				else if (body == "stop")
 				{
-					// stopServer();
+					stopServer();
 				}
 				else if (body == "restart")
 				{
-					// restartServer();
+					restartServer();
 				}
 			}
 		);
@@ -61,6 +61,26 @@ function requestHandler(request, response)
 					response.end();
 				}
 			);
+		}
+		else if (target == "status")
+		{
+			let currentStatus = "";
+
+			if (online == true)
+			{
+				currentStatus = "online";
+			}
+			else if (online == false)
+			{
+				currentStatus = "offline";
+			}
+			else
+			{
+				currentStatus = "error";
+			}
+
+			response.write(currentStatus);
+			response.end();
 		}
 	}
 }

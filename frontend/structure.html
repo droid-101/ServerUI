@@ -10,13 +10,13 @@
 
 <div class='header'>
 	<span class='status'>
-		Server Offline
+		OFFLINE
 	</span>
 
-	<span class="title">
+	<span class='title'>
 		MINECRAFT SERVER
 	</span>
-	<span class="controls">
+	<span class='controls'>
 		<input type='image' src="../icons/buttons/start-released.png" class="start" width="50" height="50" onclick="pressButton('start')"></button>
 		<input type='image' src="../icons/buttons/stop-released.png" class="stop" width="50" height="50" onclick="pressButton('stop')"></button>
 		<input type='image' src="../icons/buttons/restart-released.png" class="restart" width="50" height="50" onclick="pressButton('restart')"></button>
@@ -50,6 +50,8 @@
 			<p>This is the dashboard tab.</p>
 			<p>It will display stats about the server.</p>
 			<p>This includes the player count, RAM usage, CPU usage and clock speed, etc.</p>
+			<div id="currentstat" style="position: relative; left: 500px;">
+			</div>
 		</div>
 
 		<div class='tab' id='players'>

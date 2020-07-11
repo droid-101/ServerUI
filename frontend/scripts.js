@@ -20,6 +20,10 @@ function switchTab(name)
 			}
 		);
 	}
+	else if (name == "dashboard")
+	{
+		getStatus();
+	}
 
 	document.getElementById(name).style.display = "block";
 }
@@ -54,11 +58,11 @@ function requestData(target, handler)
 	request.send(null);
 
 	request.onreadystatechange = function()
-    {
-        if (request.readyState == 4 && request.status == 200)
-        {
+	{
+		if (request.readyState == 4 && request.status == 200)
+		{
 			handler(request.response);
-        }
+		}
 	}
 }
 
@@ -70,17 +74,27 @@ function sendData(data)
 	request.send(data);
 }
 
-function getStatus(filePath)
+function getStatus()
 {
-	var request = new XMLHttpRequest();
-	request.open("GET", filePath);
-	request.send("status");
+	requestData("status",
+		function(target)
+		{
+			let result = "";
 
-	request.onreadystatechange = function()
-    {
-        if (request.readyState == 4 && request.status == 200)
-        {
-			document.getElementById("status").innerHTML = (request.response);
-        }
-	}
+			if (target == "online")
+			{
+				result = "ONLINE";
+			}
+			else if (target == "offline")
+			{
+				result = "OFFLINE";
+			}
+			else
+			{
+				result = "ERROR";
+			}
+
+			document.getElementById("currentstat").innerHTML = result;
+		}
+	);
 }
