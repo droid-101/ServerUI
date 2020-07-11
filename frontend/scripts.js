@@ -17,24 +17,30 @@ function switchTab(name)
 	document.getElementById(name).style.display = "block";
 }
 
-function press(action)
+function pressButton(action)
 {
-	var animation = document.getElementsByClassName(action)[0];
-	animation.src = "../icons/buttons/" + action + "-pressed.png";
+	var button = document.getElementsByClassName(action)[0];
+	press(action, button)
+
+	setTimeout(release, 100, action, button);
+	sendData("http://firestorm.local:8080", action);
 }
 
-function release(action)
+function press(action, button)
 {
-	var animation = document.getElementsByClassName(action)[0];
-	animation.src = "../icons/buttons/" + action + "-released.png";
-	sendData("http://firestorm.local:8080", action);
+	button.src = "../icons/buttons/" + action + "-pressed.png";
+}
+
+function release(action, button)
+{
+	button.src = "../icons/buttons/" + action + "-released.png";
 }
 
 function loadFile(filePath)
 {
 	var request = new XMLHttpRequest();
 	request.open("GET", filePath);
-	request.send();
+	request.send("properties");
 
 	request.onreadystatechange = function()
     {
@@ -51,4 +57,19 @@ function sendData(filePath, action)
 	request.open("POST", filePath);
 	request.setRequestHeader("Content-Type", "text/plain");
 	request.send(action);
+}
+
+function getStatus(filePath)
+{
+	var request = new XMLHttpRequest();
+	request.open("GET", filePath);
+	request.send("status");
+
+	request.onreadystatechange = function()
+    {
+        if (request.readyState == 4 && request.status == 200)
+        {
+			document.getElementById("status").innerHTML = (request.response);
+        }
+	}
 }
