@@ -1,72 +1,69 @@
 var http = require("http");
 var fs = require("fs");
+var path = require('path');
 var spawn = require('child_process').spawn;
+
+const PORT = 8080;
+
 var server;
 var online = false;
 
 process.chdir("../../server");
-var website = http.createServer((function(request, response)
+
+var website = http.createServer(requestHandler);
+website.listen(PORT);
+
+function requestHandler(request, response)
 {
+	let body = "";
+
 	if (request.method == "POST")
 	{
-		var body = '';
-		request.on('data', function(chunk)
-		{
-		return body += chunk.toString();
-		});
-
-		request.on('end', () => {
-
-			if (body == "start")
+		request.on('data', (chunk) => {body += chunk.toString()});
+		request.on('end',
+			function()
 			{
-				startServer();
+				console.log(request.method, body);
+				if (body == "start")
+				{
+					// startServer();
+				}
+				else if (body == "stop")
+				{
+					// stopServer();
+				}
+				else if (body == "restart")
+				{
+					// restartServer();
+				}
 			}
-			else if (body == "stop")
-			{
-				stopServer();
-			}
-			else if (body == "restart")
-			{
-				restartServer();
-			}
-
-		response.end('ok');
-		});
+		);
 	}
-
-	if (request.method == "GET")
+	else if (request.method == "GET")
 	{
-		var body = '';
-		request.on('data', function(chunk)
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.writeHead(200, {"Content-Type": "text/plain"});
+
+		let target = path.basename(request.url);
+		console.log(request.method, target);
+
+		if (target == "properties")
 		{
-		return body += chunk.toString();
-		});
+			fs.readFile("server.properties",
+				function(err, data)
+				{
+					if (err)
+					{
+						throw err;
+					}
 
-		console.log(body);
-		if (body == "properties")
-		{
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.writeHead(200, {"Content-Type": "text/plain"});
-
-			fs.readFile("server.properties", function read(err, data)
-			{
-			if (err)
-			{
-			throw err;
-			}
-
-			const content = data;
-
-			response.end(content);
-			});
+					response.write(data);
+					response.end();
+				}
+			);
 		}
-
 	}
-}));
-
-website.listen(8080);
-
-
+}
 
 function startServer()
 {
@@ -77,6 +74,7 @@ function startServer()
 	}
 
 	online = true;
+	console.log("Starting Minecraft server");
 	server = spawn('java', ['-Xmx4096M', '-Xmx4096M', '-jar', 'server.jar', 'nogui']);
 	server.stdin.setEncoding('utf-8');
 
@@ -107,6 +105,7 @@ function stopServer()
 	}
 
 	online = false;
+	console.log("Stopping Minecraft server");
 	serverCommand("/stop");
 }
 

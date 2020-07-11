@@ -1,3 +1,7 @@
+const HOSTNAME = "firestorm.local";
+const PORT = "8080";
+const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
+
 function switchTab(name)
 {
 	var tabs = document.getElementsByClassName("tab");
@@ -7,11 +11,14 @@ function switchTab(name)
 		tabs[i].style.display = "none";
 	}
 
-	switch (name)
+	if (name == "settings")
 	{
-		case "settings":
-		document.getElementById("settings").innerHTML = loadFile("http://firestorm.local:8080");
-		break;
+		requestData("properties",
+			function(target)
+			{
+				document.getElementById(name).innerHTML = target;
+			}
+		);
 	}
 
 	document.getElementById(name).style.display = "block";
@@ -20,10 +27,9 @@ function switchTab(name)
 function pressButton(action)
 {
 	var button = document.getElementsByClassName(action)[0];
-	press(action, button)
-
+	press(action, button);
 	setTimeout(release, 100, action, button);
-	sendData("http://firestorm.local:8080", action);
+	sendData(action);
 }
 
 function press(action, button)
@@ -36,27 +42,32 @@ function release(action, button)
 	button.src = "../icons/buttons/" + action + "-released.png";
 }
 
-function loadFile(filePath)
+function generateURL(action)
+{
+	return SERVER_URL + "/" + action;
+}
+
+function requestData(target, handler)
 {
 	var request = new XMLHttpRequest();
-	request.open("GET", filePath);
-	request.send("properties");
+	request.open("GET", generateURL(target));
+	request.send(null);
 
 	request.onreadystatechange = function()
     {
         if (request.readyState == 4 && request.status == 200)
         {
-			document.getElementById("settings").innerHTML = (request.response);
+			handler(request.response);
         }
 	}
 }
 
-function sendData(filePath, action)
+function sendData(data)
 {
 	var request = new XMLHttpRequest();
-	request.open("POST", filePath);
+	request.open("POST", SERVER_URL);
 	request.setRequestHeader("Content-Type", "text/plain");
-	request.send(action);
+	request.send(data);
 }
 
 function getStatus(filePath)
