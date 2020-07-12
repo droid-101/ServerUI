@@ -10,20 +10,25 @@
 
 <div class='header'>
 	<span class='status'>
-		OFFLINE
+		<button class="statusRefresh" title="Refresh Status" id="status" onclick="getStatus()">
+			ERROR
+		</button>
 	</span>
 
 	<span class='title'>
 		MINECRAFT SERVER
 	</span>
+
 	<span class='controls'>
-		<input type='image' src="../icons/buttons/start-released.png" class="start" width="50" height="50" onclick="pressButton('start')"></button>
-		<input type='image' src="../icons/buttons/stop-released.png" class="stop" width="50" height="50" onclick="pressButton('stop')"></button>
-		<input type='image' src="../icons/buttons/restart-released.png" class="restart" width="50" height="50" onclick="pressButton('restart')"></button>
+		<span class="buttons">
+			<input type='image' src="../icons/buttons/start-released.png" class="start" width="50" height="50" onclick="pressButton('start')"></button>
+			<input type='image' src="../icons/buttons/stop-released.png" class="stop" width="50" height="50" onclick="pressButton('stop')"></button>
+			<input type='image' src="../icons/buttons/restart-released.png" class="restart" width="50" height="50" onclick="pressButton('restart')"></button>
+		</span>
 	</span>
 </div>
 
-<body onload='switchTab("home")'>
+<body onload='init()'>
 
 	<div class='menu'>
 		<button onclick='switchTab("home")'>Home</button>

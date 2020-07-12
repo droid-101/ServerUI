@@ -20,6 +20,15 @@ function switchTab(name)
 			}
 		);
 	}
+	else if (name == "players")
+	{
+		requestData("ops",
+			function(target)
+			{
+				document.getElementById(name).innerHTML = target;
+			}
+		);
+	}
 
 	document.getElementById(name).style.display = "block";
 }
@@ -68,6 +77,7 @@ function sendData(data)
 	request.open("POST", SERVER_URL);
 	request.setRequestHeader("Content-Type", "text/plain");
 	request.send(data);
+
 	getStatus();
 }
 
@@ -77,21 +87,33 @@ function getStatus()
 		function(target)
 		{
 			let result = "";
+			let colour = "";
 
 			if (target == "online")
 			{
 				result = "ONLINE";
+				colour = "rgb(22, 158, 22)";
 			}
 			else if (target == "offline")
 			{
 				result = "OFFLINE";
+				colour = "rgb(180, 16, 16)";
 			}
 			else
 			{
 				result = "ERROR";
+				colour = "rgb(180, 16, 16)";
 			}
 
 			document.getElementById("status").innerHTML = result;
+			document.getElementById("status").style.color = colour;
+			document.getElementById("status").style.borderColor = colour;
 		}
 	);
+}
+
+function init()
+{
+	getStatus();
+	switchTab("home");
 }

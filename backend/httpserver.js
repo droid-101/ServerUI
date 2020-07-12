@@ -1,6 +1,7 @@
 var http = require("http");
 var fs = require("fs");
 var path = require('path');
+const { openStdin } = require("process");
 var spawn = require('child_process').spawn;
 
 const PORT = 8080;
@@ -64,6 +65,21 @@ function requestHandler(request, response)
 					// finally stringify json and write it in the response
 					data = propertiesToJSON(data.toString());
 
+					response.write(data);
+					response.end();
+				}
+			);
+		}
+		else if (target == "ops")
+		{
+			fs.readFile("ops.json",
+				function(err, data)
+				{
+					if (err)
+					{
+						throw err;
+					}
+					console.log(data.toString());
 					response.write(data);
 					response.end();
 				}
