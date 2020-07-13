@@ -28,16 +28,16 @@
 	</span>
 </div>
 
-<body onload='init()'>
+<div class='menu'>
+	<button onclick='switchTab("home")'>Home</button>
+	<button onclick='switchTab("dashboard")'>Dashboard</button>
+	<button onclick='switchTab("players")'>Players</button>
+	<button onclick='switchTab("settings")'>Settings</button>
+	<button onclick='switchTab("worlds")'>Worlds</button>
+	<button onclick='switchTab("terminal")'>Terminal</button>
+</div>
 
-	<div class='menu'>
-		<button onclick='switchTab("home")'>Home</button>
-		<button onclick='switchTab("dashboard")'>Dashboard</button>
-		<button onclick='switchTab("players")'>Players</button>
-		<button onclick='switchTab("settings")'>Settings</button>
-		<button onclick='switchTab("worlds")'>Worlds</button>
-		<button onclick='switchTab("terminal")'>Terminal</button>
-	</div>
+<body onload='init()'>
 
 	<div class='main'>
 
@@ -63,10 +63,13 @@
 			<p class="subtitle">
 				PLAYERS
 			</p>
-			<p>This is the players tab.</p>
-			<p>It will have settings to manage players, including the whitelist and blacklist.</p>
-			<p>Sliders should be added to op and deop players as well as select their op level.</p>
-			<p>This will edit ops.json</p>
+			<div id="whitelist">
+				<p>This is the players tab.</p>
+				<p>It will have settings to manage players, including the whitelist and blacklist.</p>
+				<p>Sliders should be added to op and deop players as well as select their op level.</p>
+				<p>This will edit ops.json</p>
+			</div>
+
 		</div>
 
 		<div class='tab' id='settings'>

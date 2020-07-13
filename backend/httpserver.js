@@ -57,30 +57,30 @@ function requestHandler(request, response)
 					{
 						throw err;
 					}
-					console.log(data.toString());
+
 					// you will need to manually convert the .properties string to json
 					// first split data.toString using "\n".
 					// then make each part of the resulting array an entry in the json string
 					// the equals sign will become a colon and the value on right side should have quotes.
 					// finally stringify json and write it in the response
 					data = propertiesToJSON(data.toString());
-
+					console.log(data);
 					response.write(data);
 					response.end();
 				}
 			);
 		}
-		else if (target == "ops")
+		else if (target == "whitelist")
 		{
-			fs.readFile("ops.json",
+			fs.readFile("whitelist.json",
 				function(err, data)
 				{
 					if (err)
 					{
 						throw err;
 					}
-					console.log(data.toString());
-					response.write(data);
+
+					response.write(data.toString());
 					response.end();
 				}
 			);
@@ -166,5 +166,22 @@ function restartServer()
 
 function propertiesToJSON(properties)
 {
-	// convert to json string here and return
+	var jsonData = {};
+	var entry = [];
+	let key = "";
+	let value = "";
+
+	properties = properties.split("\n");
+
+	for (let i = 0; i < properties.length - 1; i++)
+	{
+		entry = properties[i].split("=");
+		key = entry[0];
+		value = entry[1];
+		jsonData[key] = value;
+	}
+
+	jsonData = JSON.stringify(jsonData);
+	console.log(jsonData);
+	return jsonData;
 }

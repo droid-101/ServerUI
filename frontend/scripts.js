@@ -16,16 +16,25 @@ function switchTab(name)
 		requestData("properties",
 			function(target)
 			{
-				document.getElementById(name).innerHTML = target;
+				document.getElementById("properties").innerHTML = "";
+				let properties = JSON.parse(target);
+				for (key in properties)
+				{
+					let line = "<p>";
+					line = line.concat(key, " = ", properties[key]);
+					line += "</p>";
+
+					document.getElementById("properties").innerHTML += line;
+				}
 			}
 		);
 	}
 	else if (name == "players")
 	{
-		requestData("ops",
+		requestData("whitelist",
 			function(target)
 			{
-				document.getElementById(name).innerHTML = target;
+				document.getElementById("whitelist").innerHTML = target;
 			}
 		);
 	}

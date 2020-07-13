@@ -1,4 +1,4 @@
-html, body
+html body
 {
 	margin: 0;
 }
@@ -9,7 +9,9 @@ html, body
 	padding-top: 20px;
 	padding-bottom: 20px;
 	width: 100%;
+	position: fixed;
 	display: flex;
+	top: 0px;
 }
 
 .title
@@ -35,7 +37,7 @@ html, body
 .buttons
 {
 	float: right;
-	width: 15%;
+	width: 200px;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
@@ -86,6 +88,7 @@ html, body
 	width: 200px;
 	position: fixed;
 	left: 0;
+	top: 90px;
 	background-color: rgb(34, 34, 34);
 	overflow-x: hidden;
 }
@@ -129,4 +132,11 @@ html, body
 	font-weight: 700;
 	width: 70%;
 	position: relative; left: 250px;
+}
+
+.tab
+{
+	position: relative;
+	top: 90px;
+	z-index: -1;
 }
