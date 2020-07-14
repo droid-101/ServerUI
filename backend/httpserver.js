@@ -1,7 +1,6 @@
 var http = require("http");
 var fs = require("fs");
 var path = require('path');
-const { openStdin } = require("process");
 var spawn = require('child_process').spawn;
 
 const PORT = 8080;
@@ -58,13 +57,7 @@ function requestHandler(request, response)
 						throw err;
 					}
 
-					// you will need to manually convert the .properties string to json
-					// first split data.toString using "\n".
-					// then make each part of the resulting array an entry in the json string
-					// the equals sign will become a colon and the value on right side should have quotes.
-					// finally stringify json and write it in the response
 					data = propertiesToJSON(data.toString());
-					console.log(data);
 					response.write(data);
 					response.end();
 				}
@@ -81,6 +74,29 @@ function requestHandler(request, response)
 					}
 
 					response.write(data.toString());
+					console.log(data.toString())
+					response.end();
+				}
+			);
+		}
+		else if (target == "worlds")
+		{
+			let getWorlds = spawn('ls', ['-1', '../worlds']);
+			let worlds = "";
+
+			getWorlds.stdout.on('data',
+				function(data)
+				{
+					worlds += data.toString();
+				}
+			);
+
+			getWorlds.on('close',
+				function(code)
+				{
+					worlds = worlds.split("\n");
+					console.log(worlds.toString());
+					response.write(worlds.toString());
 					response.end();
 				}
 			);

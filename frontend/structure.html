@@ -6,6 +6,7 @@
 	<title>Minecraft Server</title>
 	<script src='scripts.js'></script>
 	<link rel='stylesheet' href='style.css'>
+	<meta charset="UTF-8">
 </head>
 
 <div class='header'>
@@ -52,11 +53,17 @@
 			<p class="subtitle">
 				DASHBOARD
 			</p>
-			<p>This is the dashboard tab.</p>
-			<p>It will display stats about the server.</p>
-			<p>This includes the player count, RAM usage, CPU usage and clock speed, etc.</p>
-			<div id="currentstat" style="position: relative; left: 500px;">
+			<br>
+			<div class="ram-allocation">Allocate RAM to Server</div>
+			<div class="slidercontainer">
+				<input type="range" min="1" max="7" value="" class="slider"></input>
 			</div>
+			<p>Allocated RAM: </p>
+			<p>CPU Usage: </p>
+			<p>Server RAM Usage: </p>
+			<p>Computer RAM Usage: </p>
+			<p>Players Online: </p>
+			<p>Current World: </p>
 		</div>
 
 		<div class='tab' id='players'>
@@ -64,10 +71,6 @@
 				PLAYERS
 			</p>
 			<div id="whitelist">
-				<p>This is the players tab.</p>
-				<p>It will have settings to manage players, including the whitelist and blacklist.</p>
-				<p>Sliders should be added to op and deop players as well as select their op level.</p>
-				<p>This will edit ops.json</p>
 			</div>
 
 		</div>
@@ -84,10 +87,8 @@
 			<p class="subtitle">
 				WORLDS
 			</p>
-			<p>This is the worlds tab.</p>
-			<p>Players should be able to upload a zip file of their custom worlds.</p>
-			<p>Already uploaded worlds should be displayed in a list and should be selectable.</p>
-			<p>A server restart will need to take place.</p>
+			<div id="world-list">
+			</div>
 		</div>
 
 		<div class='tab' id='terminal'>

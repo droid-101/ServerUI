@@ -34,13 +34,42 @@ function switchTab(name)
 		requestData("whitelist",
 			function(target)
 			{
-				document.getElementById("whitelist").innerHTML = target;
+				document.getElementById("whitelist").innerHTML = "";
+				let whitelist = JSON.parse(target);
+				for (player in whitelist)
+				{
+					let line = "<p>";
+					line += whitelist[player]["name"];
+					line += "</p>";
+
+					document.getElementById("whitelist").innerHTML += line;
+				}
+			}
+		);
+	}
+	else if (name == "worlds")
+	{
+		requestData("worlds",
+			function(target)
+			{
+				target = target.split(",");
+				document.getElementById("world-list").innerHTML = "";
+
+				for (i = 0; i < target.length; i++)
+				{
+					let line = "<p>";
+					line += target[i];
+					line += "</p>";
+
+					document.getElementById("world-list").innerHTML += line;
+				}
 			}
 		);
 	}
 
 	document.getElementById(name).style.display = "block";
 }
+
 
 function pressButton(action)
 {
@@ -106,7 +135,7 @@ function getStatus()
 			else if (target == "offline")
 			{
 				result = "OFFLINE";
-				colour = "rgb(180, 16, 16)";
+				colour = "rgb(66, 66, 66)";
 			}
 			else
 			{
