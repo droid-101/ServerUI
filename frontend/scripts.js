@@ -81,12 +81,12 @@ function pressButton(action)
 
 function press(action, button)
 {
-	button.src = "../icons/buttons/" + action + "-pressed.png";
+	button.src = "icons/buttons/" + action + "-pressed.png";
 }
 
 function release(action, button)
 {
-	button.src = "../icons/buttons/" + action + "-released.png";
+	button.src = "icons/buttons/" + action + "-released.png";
 }
 
 function generateURL(action)
@@ -135,7 +135,7 @@ function getStatus()
 			else if (target == "offline")
 			{
 				result = "OFFLINE";
-				colour = "rgb(66, 66, 66)";
+				colour = "rgb(100, 100, 100)";
 			}
 			else
 			{
@@ -148,6 +148,11 @@ function getStatus()
 			document.getElementById("status").style.borderColor = colour;
 		}
 	);
+}
+
+function setValue(value)
+{
+	document.getElementById("allocated-ram").innerHTML = value;
 }
 
 function init()

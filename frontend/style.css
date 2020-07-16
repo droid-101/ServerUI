@@ -92,6 +92,7 @@ html body
 	top: 90px;
 	background-color: rgb(34, 34, 34);
 	overflow-x: hidden;
+	z-index: 5;
 }
 
 .menu button
@@ -110,11 +111,6 @@ html body
 }
 
 .menu button:hover
-{
-	background-color: rgba(42, 133, 42, 0.534);
-}
-
-.menu button:focus
 {
 	background-color: rgb(42, 133, 42);
 }
@@ -144,7 +140,6 @@ html body
 {
 	position: relative;
 	top: 90px;
-	z-index: -1;
 }
 
 .ram-allocation
@@ -161,6 +156,7 @@ html body
 	text-align: center;
 	padding-top: 20px;
 	padding-bottom: 20px;
+	position: relative;
 }
 
 .slider
@@ -170,15 +166,18 @@ html body
 	background-color: rgb(167, 167, 167);
 	height: 10px;
 	cursor: pointer;
-	z-index: 50;
+	position: relative;
+	z-index: 51;
 }
 
 .slider::-moz-range-thumb
 {
-  width: 20px;
-  height: 20px;
-  border-radius: 20px;
+  width: 12px;
+  height: 24px;
+  border-radius: 5px;
   background: rgb(55, 168, 55);
   outline: none;
   cursor: pointer;
+  position: relative;
+  z-index: 6;
 }

@@ -4,7 +4,7 @@
 
 <head>
 	<title>Minecraft Server</title>
-	<script src='scripts.js'></script>
+	<script src='scripts.js' onload='init()'></script>
 	<link rel='stylesheet' href='style.css'>
 	<meta charset="UTF-8">
 </head>
@@ -22,9 +22,9 @@
 
 	<span class='controls'>
 		<span class="buttons">
-			<input type='image' src="../icons/buttons/start-released.png" class="start" width="50" height="50" onclick="pressButton('start')"></button>
-			<input type='image' src="../icons/buttons/stop-released.png" class="stop" width="50" height="50" onclick="pressButton('stop')"></button>
-			<input type='image' src="../icons/buttons/restart-released.png" class="restart" width="50" height="50" onclick="pressButton('restart')"></button>
+			<input type='image' src="icons/buttons/start-released.png" class="start" width="50" height="50" onclick="pressButton('start')">
+			<input type='image' src="icons/buttons/stop-released.png" class="stop" width="50" height="50" onclick="pressButton('stop')">
+			<input type='image' src="icons/buttons/restart-released.png" class="restart" width="50" height="50" onclick="pressButton('restart')">
 		</span>
 	</span>
 </div>
@@ -53,17 +53,24 @@
 			<p class="subtitle">
 				DASHBOARD
 			</p>
-			<br>
+
+			<br/>
 			<div class="ram-allocation">Allocate RAM to Server</div>
 			<div class="slidercontainer">
-				<input type="range" min="1" max="7" value="" class="slider"></input>
+				<input type="range" min="1" max="100" value="50" class="slider" step="1" oninput="setValue()">
+				<input type="button" value="test">
 			</div>
-			<p>Allocated RAM: </p>
-			<p>CPU Usage: </p>
-			<p>Server RAM Usage: </p>
-			<p>Computer RAM Usage: </p>
-			<p>Players Online: </p>
-			<p>Current World: </p>
+
+
+
+			<div class="stats">
+				<p>CPU Usage: </p>
+				<p>Allocated RAM: </p>
+				<p>Server RAM Usage: </p>
+				<p>Computer RAM Usage: </p>
+				<p>Players Online: </p>
+				<p>Current World: </p>
+			</div>
 		</div>
 
 		<div class='tab' id='players'>

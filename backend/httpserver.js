@@ -5,6 +5,12 @@ var spawn = require('child_process').spawn;
 
 const PORT = 8080;
 
+var contentTypes = {
+	".css": "text/css",
+	".js": "text/javascript",
+	".png": "image/png"
+};
+
 var server;
 var online = false;
 
@@ -42,12 +48,27 @@ function requestHandler(request, response)
 	else if (request.method == "GET")
 	{
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.writeHead(200, {"Content-Type": "text/plain"});
 
-		let target = path.basename(request.url);
+		let target = request.url;
 		console.log(request.method, target);
 
-		if (target == "properties")
+		if (target == "/mcserver")
+		{
+			fs.readFile("../repo/frontend/structure.html",
+				function(err, data)
+				{
+					if (err)
+					{
+						throw err;
+					}
+
+					response.writeHead(200, {"Content-Type": "text/html"});
+					response.write(data);
+					response.end();
+				}
+			);
+		}
+		else if (target == "/properties")
 		{
 			fs.readFile("server.properties",
 				function(err, data)
@@ -58,12 +79,13 @@ function requestHandler(request, response)
 					}
 
 					data = propertiesToJSON(data.toString());
+					response.writeHead(200, {"Content-Type": "text/plain"});
 					response.write(data);
 					response.end();
 				}
 			);
 		}
-		else if (target == "whitelist")
+		else if (target == "/whitelist")
 		{
 			fs.readFile("whitelist.json",
 				function(err, data)
@@ -73,13 +95,14 @@ function requestHandler(request, response)
 						throw err;
 					}
 
+					response.writeHead(200, {"Content-Type": "text/plain"});
 					response.write(data.toString());
 					console.log(data.toString())
 					response.end();
 				}
 			);
 		}
-		else if (target == "worlds")
+		else if (target == "/worlds")
 		{
 			let getWorlds = spawn('ls', ['-1', '../worlds']);
 			let worlds = "";
@@ -96,12 +119,13 @@ function requestHandler(request, response)
 				{
 					worlds = worlds.split("\n");
 					console.log(worlds.toString());
+					response.writeHead(200, {"Content-Type": "text/plain"});
 					response.write(worlds.toString());
 					response.end();
 				}
 			);
 		}
-		else if (target == "status")
+		else if (target == "/status")
 		{
 			let currentStatus = "";
 
@@ -118,9 +142,15 @@ function requestHandler(request, response)
 				currentStatus = "error";
 			}
 
+			response.writeHead(200, {"Content-Type": "text/plain"});
 			response.write(currentStatus);
 			response.end();
 		}
+		else
+		{
+			getFrontendResource(target, response);
+		}
+
 	}
 }
 
@@ -200,4 +230,28 @@ function propertiesToJSON(properties)
 	jsonData = JSON.stringify(jsonData);
 	console.log(jsonData);
 	return jsonData;
+}
+
+function getFrontendResource(target, response)
+{
+	let ext = path.extname(target);
+	let type = contentTypes[ext];
+	let filePath = "../repo/frontend" + target;
+
+	fs.readFile(filePath,
+		function(err, data)
+		{
+			if (err)
+			{
+				response.writeHead(404);
+			}
+			else
+			{
+				response.writeHead(200, {"Content-Type": type});
+				response.write(data);
+			}
+
+			response.end();
+		}
+	);
 }
