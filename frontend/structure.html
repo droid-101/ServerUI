@@ -52,30 +52,40 @@
 		<div class='tab' id='dashboard'>
 			<p class="subtitle">
 				DASHBOARD
+
+				<span>
+					<button class="save-changes" onclick="sendRAM()">SAVE</button>
+				</span>
+				<span>
+					<button class="refresh">REFRESH</button>
+				</span>
 			</p>
 
 			<br/>
 			<div class="ram-allocation">Allocate RAM to Server</div>
 			<div class="slidercontainer">
-				<input type="range" min="1" max="100" value="50" class="slider" step="1" oninput="setValue()">
-				<input type="button" value="test">
+				<input type="range" min="1024" max="7168" value="" class="slider" id="slider" step="1" oninput="setValue(value)">
 			</div>
 
+			<p>CPU Usage: </p>
+			<p id="allocated-ram">Allocated RAM: </p>
+			<p>Server RAM Usage: </p>
+			<p>Computer RAM Usage: </p>
+			<p>Players Online: </p>
+			<p>Current World: </p>
 
-
-			<div class="stats">
-				<p>CPU Usage: </p>
-				<p>Allocated RAM: </p>
-				<p>Server RAM Usage: </p>
-				<p>Computer RAM Usage: </p>
-				<p>Players Online: </p>
-				<p>Current World: </p>
-			</div>
 		</div>
 
 		<div class='tab' id='players'>
 			<p class="subtitle">
 				PLAYERS
+
+				<span>
+					<button class="save-changes">SAVE</button>
+				</span>
+				<span>
+					<button class="edit">EDIT</button>
+				</span>
 			</p>
 			<div id="whitelist">
 			</div>
@@ -85,14 +95,30 @@
 		<div class='tab' id='settings'>
 			<p class="subtitle">
 				SETTINGS
+
+				<span>
+					<button class="save-changes">SAVE</button>
+				</span>
+				<span>
+					<button class="edit" id="editProperties" onclick="editProperties()">EDIT</button>
+				</span>
 			</p>
 			<div id="properties">
 			</div>
+
+			<br>
 		</div>
 
 		<div class='tab' id='worlds'>
 			<p class="subtitle">
 				WORLDS
+
+				<span>
+					<button class="save-changes">SAVE</button>
+				</span>
+				<span>
+					<button class="edit">EDIT</button>
+				</span>
 			</p>
 			<div id="world-list">
 			</div>

@@ -42,6 +42,20 @@ function requestHandler(request, response)
 				{
 					restartServer();
 				}
+				else if (body.split(" ")[0] == "RAM:")
+				{
+					let value = body.split(" ")[1]
+					fs.writeFile("ram.txt", value,
+						function(err)
+						{
+							if (err)
+							{
+								return console.log(err);
+							}
+						}
+
+					);
+				}
 			}
 		);
 	}
@@ -125,6 +139,22 @@ function requestHandler(request, response)
 				}
 			);
 		}
+		else if (target == "/ram")
+		{
+			fs.readFile("ram.txt",
+				function(err, data)
+				{
+					if (err)
+					{
+						return console.log(err);
+					}
+
+					response.writeHead(200, {"Content-Type": "text/plain"});
+					response.write(data.toString());
+					response.end();
+				}
+			);
+		}
 		else if (target == "/status")
 		{
 			let currentStatus = "";
@@ -163,21 +193,36 @@ function startServer()
 	}
 
 	online = true;
-	console.log("Starting Minecraft server");
-	server = spawn('java', ['-Xmx4096M', '-Xmx4096M', '-jar', 'server.jar', 'nogui']);
-	server.stdin.setEncoding('utf-8');
+	let ram;
 
-	server.stdout.on('data', (data) => {
-	console.log(`${data}`);
-	});
+	fs.readFile("ram.txt",
+		function(err, data)
+		{
+			if (err)
+			{
+				return console.log(err);
+			}
 
-	server.stderr.on('data', (data) => {
-	console.error(`${data}`);
-	});
+			ram = (data.toString());
 
-	server.on('close', (code) => {
-	console.log(`Minecraft server stopped with exit code (${code})`);
-	});
+			server = spawn('java', ['-Xmx' + ram + "M", '-Xms' + ram + "M", '-jar', 'server.jar', 'nogui']);
+
+			server.stdin.setEncoding('utf-8');
+			console.log("Minecraft server starting with " + ram + " of RAM");
+
+			server.stdout.on('data', (data) => {
+			console.log(`${data}`);
+			});
+
+			server.stderr.on('data', (data) => {
+			console.error(`${data}`);
+			});
+
+			server.on('close', (code) => {
+			console.log(`Minecraft server stopped with exit code (${code})`);
+			});
+		}
+	);
 }
 
 function serverCommand(command)

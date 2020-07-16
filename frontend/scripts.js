@@ -1,6 +1,7 @@
 const HOSTNAME = "firestorm.local";
 const PORT = "8080";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
+var propertiesEditable = true;
 
 function switchTab(name)
 {
@@ -40,6 +41,7 @@ function switchTab(name)
 				{
 					let line = "<p>";
 					line += whitelist[player]["name"];
+					line += "<input class='opSwitch' type='checkbox'></input>"
 					line += "</p>";
 
 					document.getElementById("whitelist").innerHTML += line;
@@ -55,10 +57,11 @@ function switchTab(name)
 				target = target.split(",");
 				document.getElementById("world-list").innerHTML = "";
 
-				for (i = 0; i < target.length; i++)
+				for (i = 0; i < target.length - 1; i++)
 				{
 					let line = "<p>";
 					line += target[i];
+					line += "<input class='selectedWorld' type='checkbox'></input>"
 					line += "</p>";
 
 					document.getElementById("world-list").innerHTML += line;
@@ -152,11 +155,75 @@ function getStatus()
 
 function setValue(value)
 {
-	document.getElementById("allocated-ram").innerHTML = value;
+	value = Math.trunc(value / 1024) * 1024;
+	document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + value + " MB (" + Math.trunc(value / 1024) + " GB)";
+}
+
+function sendRAM()
+{
+	let value = document.getElementById("slider").value;
+	value = Math.trunc(value / 1024) * 1024;
+	sendData("RAM: " + value);
+}
+
+function getRAM()
+{
+	requestData("ram",
+		function(target)
+		{
+			document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + target  + "MB (" + target[0] + " GB)";
+			document.getElementById("slider").value = target;
+			console.log(target)
+		}
+	);
+}
+
+function editProperties()
+{
+	requestData("properties",
+		function(target)
+		{
+			document.getElementById("properties").innerHTML = "";
+			let properties = JSON.parse(target);
+
+			if (propertiesEditable)
+			{
+				propertiesEditable = false;
+				document.getElementById("editProperties").innerHTML = "CANCEL";
+				document.getElementById("editProperties").style.backgroundColor = "red";
+
+				for (key in properties)
+				{
+					let line = "<p>";
+					line = line.concat(key, " = ");
+					line += "<input class='changeProperty' type='text' value=" + properties[key] + "></input>"
+					line += "</p>";
+
+					document.getElementById("properties").innerHTML += line;
+				}
+			}
+			else
+			{
+				propertiesEditable = true;
+				document.getElementById("editProperties").innerHTML = "EDIT";
+				document.getElementById("editProperties").style.backgroundColor = "rgb(22, 116, 179)";
+
+				for (key in properties)
+				{
+					let line = "<p>";
+					line = line.concat(key, " = ", properties[key]);
+					line += "</p>";
+
+					document.getElementById("properties").innerHTML += line;
+				}
+			}
+		}
+	);
 }
 
 function init()
 {
 	getStatus();
 	switchTab("home");
+	getRAM();
 }

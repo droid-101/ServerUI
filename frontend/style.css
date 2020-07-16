@@ -13,6 +13,7 @@ html body
 	position: fixed;
 	display: flex;
 	top: 0px;
+	z-index: 100;
 }
 
 .title
@@ -120,7 +121,7 @@ html body
 	font-size: 40pt;
 	font-family: monospace;
 	font-weight: bold;
-	width: 70%;
+	width: 78%;
 	position: relative; left: 250px;
 	padding: 0px;
 	margin-top: 30px;
@@ -132,7 +133,7 @@ html body
 	font-size: 20pt;
 	font-family: monospace;
 	font-weight: 700;
-	width: 70%;
+	width: 100%;
 	position: relative; left: 250px;
 }
 
@@ -180,4 +181,53 @@ html body
   cursor: pointer;
   position: relative;
   z-index: 6;
+}
+
+.save-changes, .edit, .refresh
+{
+	font-size: 24pt;
+	font-family: monospace;
+	font-weight: 700;
+	border-radius: 10px;
+	color: white;
+	outline: none;
+	float: right;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+.edit
+{
+	background-color: rgb(22, 116, 179);
+}
+
+.save-changes
+{
+	background-color: rgb(55, 168, 55);
+}
+
+.refresh
+{
+	background-color: rgb(125, 79, 211);
+}
+
+.opSwitch, .selectedWorld
+{
+	margin-right: 60px;
+}
+
+.changeProperty
+{
+	background-color: rgb(233, 229, 229);
+	font-size: 16pt;
+	width: 150px;
+	font-family: monospace;
+	font-weight: 700;
+	border-style: solid;
+	border: none;
+	border-radius: 5px;
+	position: relative;
+	bottom: 1px;
+	padding: 5px;
 }
