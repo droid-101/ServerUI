@@ -44,7 +44,7 @@ function requestHandler(request, response)
 				}
 				else if (body.split(" ")[0] == "RAM:")
 				{
-					let value = body.split(" ")[1]
+					let value = body.split(" ")[1];
 					fs.writeFile("ram.txt", value,
 						function(err)
 						{
@@ -53,7 +53,21 @@ function requestHandler(request, response)
 								return console.log(err);
 							}
 						}
+					);
+				}
+				else if (body.split("^")[0] == "properties")
+				{
+					let propertiesJSON = body.split("^")[1];
+					let properties = JSONtoProperties(propertiesJSON);
 
+					fs.writeFile("server.properties", properties,
+						function(err)
+						{
+							if (err)
+							{
+								return console.log(err);
+							}
+						}
 					);
 				}
 			}
@@ -111,7 +125,6 @@ function requestHandler(request, response)
 
 					response.writeHead(200, {"Content-Type": "text/plain"});
 					response.write(data.toString());
-					console.log(data.toString())
 					response.end();
 				}
 			);
@@ -132,7 +145,6 @@ function requestHandler(request, response)
 				function(code)
 				{
 					worlds = worlds.split("\n");
-					console.log(worlds.toString());
 					response.writeHead(200, {"Content-Type": "text/plain"});
 					response.write(worlds.toString());
 					response.end();
@@ -273,8 +285,20 @@ function propertiesToJSON(properties)
 	}
 
 	jsonData = JSON.stringify(jsonData);
-	console.log(jsonData);
 	return jsonData;
+}
+
+function JSONtoProperties(jsonData)
+{
+	let properties = "Minecraft Server Settings\n";
+	jsonData = JSON.parse(jsonData);
+
+	for (key in jsonData)
+	{
+		properties = properties.concat(key, "=", jsonData[key], "\n");
+	}
+
+	return properties;
 }
 
 function getFrontendResource(target, response)

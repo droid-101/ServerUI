@@ -207,6 +207,11 @@ html body
 	background-color: rgb(55, 168, 55);
 }
 
+.save
+{
+	display: none;
+}
+
 .refresh
 {
 	background-color: rgb(125, 79, 211);
