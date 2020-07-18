@@ -39,27 +39,39 @@ html body
 .buttons
 {
 	float: right;
-	width: 200px;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
-	background-color: none;
-	image-rendering: pixelated;
-	image-rendering: crisp-edges;
+	width: 230px;
+}
+
+.image
+{
+	width: 42px;
+	height: 50px;
+}
+
+.start, .stop, .restart
+{
+	border-radius: 10px;
+	border: none;
 }
 
 .start
 {
+	background-color: rgba(14, 216, 14, 0.89);
 	margin: auto;
 }
 
 .stop
 {
+	background-color: rgba(255, 0, 0, 0.835);
 	margin: auto;
 }
 
 .restart
 {
+	background-color: rgba(255, 208, 1, 0.938);
 	margin: auto;
 }
 
@@ -126,6 +138,11 @@ html body
 	padding: 0px;
 	margin-top: 30px;
 	margin-bottom: 0px;
+}
+
+.note
+{
+	color: rgb(44, 163, 60);
 }
 
 .tab p:not(.subtitle)
@@ -255,7 +272,7 @@ html body
 	width: 250px;
 }
 
-.deletePlayer
+.deletePlayer, .deleteWorld
 {
 	width: 30px;
 	height: 30px;

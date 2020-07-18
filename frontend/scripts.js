@@ -54,16 +54,20 @@ function switchTab(name)
 			}
 		);
 
-		requestData("ops",
-			function(target)
-			{
-				let ops = JSON.parse(target);
-				for (player in ops)
+		setTimeout(function()
+		{
+			requestData("ops",
+				function(target)
 				{
-					document.getElementById("op-" + ops[player]["name"]).checked = true;
+					let ops = JSON.parse(target);
+					for (player in ops)
+					{
+						document.getElementById("op-" + ops[player]["name"]).checked = true;
+					}
 				}
-			}
-		);
+			);
+		}
+		, 500);
 	}
 	else if (name == "worlds")
 	{
@@ -77,6 +81,7 @@ function switchTab(name)
 				{
 					let line = "<p>";
 					line += target[i];
+					line += "<button class='deleteWorld' id='delete`" + target[i] + "' onclick='deleteWorld(this.id)'>-</button>";
 					line += "</p>";
 
 					document.getElementById("world-list").innerHTML += line;
@@ -91,20 +96,8 @@ function switchTab(name)
 
 function pressButton(action)
 {
-	var button = document.getElementsByClassName(action)[0];
-	press(action, button);
-	setTimeout(release, 100, action, button);
 	sendData(action);
-}
-
-function press(action, button)
-{
-	button.src = "icons/buttons/" + action + "-pressed.png";
-}
-
-function release(action, button)
-{
-	button.src = "icons/buttons/" + action + "-released.png";
+	setTimeout(getStatus, 5000);
 }
 
 function generateURL(action)
@@ -115,6 +108,7 @@ function generateURL(action)
 function requestData(target, handler)
 {
 	var request = new XMLHttpRequest();
+	request.timeout = 10000;
 	request.open("GET", generateURL(target));
 	request.send(null);
 
@@ -125,16 +119,20 @@ function requestData(target, handler)
 			handler(request.response);
 		}
 	}
+
+	request.ontimeout = function()
+	{
+		console.log("Request timed out.");
+	}
 }
 
 function sendData(data)
 {
 	var request = new XMLHttpRequest();
+	request.timeout = 10000;
 	request.open("POST", SERVER_URL);
 	request.setRequestHeader("Content-Type", "text/plain");
 	request.send(data);
-
-	getStatus();
 }
 
 function getStatus()
@@ -310,7 +308,18 @@ function addPlayer()
 				toggleAdd();
 			}
 		);
-	} , 1000);
+
+		requestData("ops",
+			function(target)
+			{
+				let ops = JSON.parse(target);
+				for (player in ops)
+				{
+					document.getElementById("op-" + ops[player]["name"]).checked = true;
+				}
+			}
+		);
+	} , 500);
 }
 
 function removePlayer(id)
@@ -337,7 +346,18 @@ function removePlayer(id)
 				}
 			}
 		);
-	} ,1000);
+
+		requestData("ops",
+			function(target)
+			{
+				let ops = JSON.parse(target);
+				for (player in ops)
+				{
+					document.getElementById("op-" + ops[player]["name"]).checked = true;
+				}
+			}
+		);
+	} , 500);
 }
 
 function editOps(id)
@@ -357,4 +377,6 @@ function init()
 	getStatus();
 	switchTab("home");
 	getRAM();
+
+	setInterval(getStatus, 30000);
 }

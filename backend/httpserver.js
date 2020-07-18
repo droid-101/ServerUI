@@ -5,14 +5,14 @@ var spawn = require('child_process').spawn;
 
 const PORT = 8080;
 
+var server = null;
+var error = false;
+
 var contentTypes = {
 	".css": "text/css",
 	".js": "text/javascript",
 	".png": "image/png"
 };
-
-var server;
-var online = false;
 
 process.chdir("../../server");
 
@@ -76,15 +76,16 @@ function requestHandler(request, response)
 				}
 				else if (body.split(" ")[0] == "removePlayer")
 				{
-					serverCommand("/whitelist remove " + body.split(" ")[1])
+					serverCommand("/whitelist remove " + body.split(" ")[1]);
+					serverCommand("/deop " + body.split(" ")[1]);
 				}
 				else if (body.split(" ")[0] == "op")
 				{
-					serverCommand("/op " + body.split(" ")[1])
+					serverCommand("/op " + body.split(" ")[1]);
 				}
 				else if (body.split(" ")[0] == "deop")
 				{
-					serverCommand("/deop " + body.split(" ")[1])
+					serverCommand("/deop " + body.split(" ")[1]);
 				}
 			}
 		);
@@ -203,18 +204,20 @@ function requestHandler(request, response)
 		{
 			let currentStatus = "";
 
-			if (online == true)
-			{
-				currentStatus = "online";
-			}
-			else if (online == false)
-			{
-				currentStatus = "offline";
-			}
-			else
+			if (error)
 			{
 				currentStatus = "error";
 			}
+			else if (serverRunning())
+			{
+				currentStatus = "online";
+			}
+			else
+			{
+				currentStatus = "offline";
+			}
+
+			console.log("Server status: " + currentStatus);
 
 			response.writeHead(200, {"Content-Type": "text/plain"});
 			response.write(currentStatus);
@@ -224,19 +227,32 @@ function requestHandler(request, response)
 		{
 			getFrontendResource(target, response);
 		}
-
 	}
+}
+
+function serverRunning()
+{
+	if (server == null)
+	{
+		return false;
+	}
+
+	if (server.exitCode == null)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 function startServer()
 {
-	if (online)
+	if (serverRunning())
 	{
 		console.log("The server is currently running!");
 		return;
 	}
 
-	online = true;
 	let ram;
 
 	fs.readFile("ram.txt",
@@ -271,7 +287,7 @@ function startServer()
 
 function serverCommand(command)
 {
-	if (!online)
+	if (!serverRunning())
 	{
 		console.log("Server is offline: Command cannot be executed");
 		return;
@@ -282,20 +298,20 @@ function serverCommand(command)
 
 function stopServer()
 {
-	if (!online)
+	if (!serverRunning())
 	{
 		console.log("The server is not running!");
 		return;
 	}
 
-	online = false;
 	console.log("Stopping Minecraft server");
 	serverCommand("/stop");
+	server = null;
 }
 
 function restartServer()
 {
-	if (!online)
+	if (!serverRunning())
 	{
 		console.log("The server is not running!");
 		return;
