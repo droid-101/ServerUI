@@ -4,7 +4,7 @@
 
 <head>
 	<title>Minecraft Server</title>
-	<script src='scripts.js' onload='init()'></script>
+	<script src='scripts.js'></script>
 	<link rel='stylesheet' href='style.css'>
 	<meta charset="UTF-8">
 </head>
@@ -64,7 +64,7 @@
 			<br/>
 			<div class="ram-allocation">Allocate RAM to Server</div>
 			<div class="slidercontainer">
-				<input type="range" min="1024" max="7168" value="" class="slider" id="slider" step="1" oninput="setValue(value)">
+				<input type="range" min="1024" max="6144" value="" class="slider" id="slider" step="1" oninput="setValue(value)">
 			</div>
 
 			<p>CPU Usage: </p>
@@ -81,14 +81,17 @@
 				PLAYERS
 
 				<span>
-					<button class="save-changes">SAVE</button>
+					<button class="add" id="addPlayer" title="Add Player" onclick="toggleAdd()">+</button>
 				</span>
 				<span>
-					<button class="edit">EDIT</button>
+					<button class="save-changes" id="savePlayers" onclick="addPlayer()">SAVE</button>
 				</span>
 			</p>
-			<div id="whitelist">
+			<div id="whitelist" class="whitelist">
 			</div>
+			<p><input class='addPlayer' id='newPlayer' type='text'></input></p>
+
+			<br>
 
 		</div>
 
@@ -116,7 +119,10 @@
 					<button class="save-changes">SAVE</button>
 				</span>
 				<span>
-					<button class="edit">EDIT</button>
+					<button class="remove" title="Remove World">-</button>
+				</span>
+				<span>
+					<button class="add" title="Add World">+</button>
 				</span>
 			</p>
 			<div id="world-list">
@@ -127,8 +133,6 @@
 			<p class="subtitle">
 				TERMINAL
 			</p>
-			<p>This is the terminal tab.</p>
-			<p>It will provide access to the server terminal and log.</p>
 		</div>
 	</div>
 </body>

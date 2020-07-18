@@ -2,6 +2,7 @@ const HOSTNAME = "firestorm.local";
 const PORT = "8080";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 var propertiesEditable = true;
+var addingPlayer = false;
 
 function switchTab(name)
 {
@@ -41,10 +42,25 @@ function switchTab(name)
 				{
 					let line = "<p>";
 					line += whitelist[player]["name"];
-					line += "<input class='opSwitch' type='checkbox'></input>"
+					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
+					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
 					line += "</p>";
 
 					document.getElementById("whitelist").innerHTML += line;
+				}
+
+				document.getElementById("newPlayer").style.display = "none";
+				document.getElementById("savePlayers").style.display = "none";
+			}
+		);
+
+		requestData("ops",
+			function(target)
+			{
+				let ops = JSON.parse(target);
+				for (player in ops)
+				{
+					document.getElementById("op-" + ops[player]["name"]).checked = true;
 				}
 			}
 		);
@@ -61,7 +77,6 @@ function switchTab(name)
 				{
 					let line = "<p>";
 					line += target[i];
-					line += "<input class='selectedWorld' type='checkbox'></input>"
 					line += "</p>";
 
 					document.getElementById("world-list").innerHTML += line;
@@ -173,7 +188,6 @@ function getRAM()
 		{
 			document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + target  + " MB (" + target[0] + " GB)";
 			document.getElementById("slider").value = target;
-			console.log(target)
 		}
 	);
 }
@@ -246,6 +260,96 @@ function saveProperties()
 			setTimeout(function() {editProperties();}, 1000);
 		}
 	);
+}
+
+function toggleAdd()
+{
+	if (!addingPlayer)
+	{
+		document.getElementById("newPlayer").style.display = "block";
+		document.getElementById("newPlayer").value = "";
+		addingPlayer = true;
+		document.getElementById("addPlayer").style.backgroundColor = "red";
+		document.getElementById("addPlayer").innerHTML = "CANCEL";
+		document.getElementById("savePlayers").style.display = "inline";
+	}
+	else
+	{
+		addingPlayer = false;
+		document.getElementById("addPlayer").style.backgroundColor = "rgb(55, 168, 55)";
+		document.getElementById("addPlayer").innerHTML = "+";
+		document.getElementById("newPlayer").style.display = "none";
+		document.getElementById("savePlayers").style.display = "none";
+	}
+}
+
+function addPlayer()
+{
+	let player = document.getElementById("newPlayer").value;
+	sendData("addPlayer " + player);
+
+	addingPlayer = true;
+	setTimeout(function()
+	{
+		requestData("whitelist",
+			function(target)
+			{
+				document.getElementById("whitelist").innerHTML = "";
+				let whitelist = JSON.parse(target);
+				for (player in whitelist)
+				{
+					let line = "<p>";
+					line += whitelist[player]["name"];
+					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
+					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
+					line += "</p>";
+
+					document.getElementById("whitelist").innerHTML += line;
+				}
+				console.log(addingPlayer)
+				toggleAdd();
+			}
+		);
+	} , 1000);
+}
+
+function removePlayer(id)
+{
+	player = "removePlayer " + id.split("-")[1];
+	sendData(player);
+
+	setTimeout(function()
+	{
+		requestData("whitelist",
+			function(target)
+			{
+				document.getElementById("whitelist").innerHTML = "";
+				let whitelist = JSON.parse(target);
+				for (player in whitelist)
+				{
+					let line = "<p>";
+					line += whitelist[player]["name"];
+					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
+					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
+					line += "</p>";
+
+					document.getElementById("whitelist").innerHTML += line;
+				}
+			}
+		);
+	} ,1000);
+}
+
+function editOps(id)
+{
+	if (document.getElementById(id).checked)
+	{
+		sendData("op " + id.split("-")[1]);
+	}
+	else
+	{
+		sendData("deop " + id.split("-")[1]);
+	}
 }
 
 function init()

@@ -183,7 +183,7 @@ html body
   z-index: 6;
 }
 
-.save-changes, .edit, .refresh
+.save-changes, .edit, .refresh, .add, .remove
 {
 	font-size: 24pt;
 	font-family: monospace;
@@ -193,7 +193,6 @@ html body
 	outline: none;
 	float: right;
 	margin-top: 10px;
-	margin-right: 10px;
 	margin-left: 10px;
 }
 
@@ -217,16 +216,25 @@ html body
 	background-color: rgb(125, 79, 211);
 }
 
-.opSwitch, .selectedWorld
+.switch, .selectedWorld
 {
 	margin-right: 60px;
 }
 
-.changeProperty
+.add
+{
+	background-color: rgb(55, 168, 55);
+}
+
+.remove
+{
+	background-color: red;
+}
+
+.changeProperty, .addPlayer
 {
 	background-color: rgb(233, 229, 229);
 	font-size: 16pt;
-	width: 150px;
 	font-family: monospace;
 	font-weight: 700;
 	border-style: solid;
@@ -235,4 +243,106 @@ html body
 	position: relative;
 	bottom: 1px;
 	padding: 5px;
+}
+
+.changeProperty
+{
+	width: 150px;
+}
+
+.addPlayer
+{
+	width: 250px;
+}
+
+.deletePlayer
+{
+	width: 30px;
+	height: 30px;
+	float: right;
+	margin-left: 30px;
+	margin-right: 6.5px;
+	background-color: red;
+	color: white;
+	font-size: 16pt;
+	font-family: monospace;
+	font-weight: 700;
+	border-radius: 10px;
+	position: relative;
+	top: -1px;
+}
+
+.whitelist
+{
+	width: 78%;
+}
+
+.switch
+{
+	position: relative;
+	width: 50px;
+	height: 30px;
+	float: right;
+	padding-right: 8px;
+	margin-right: 8px;
+}
+
+.switch input
+{
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.switch-slider
+{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+.switch-slider:before
+{
+	position: absolute;
+	content: "";
+	height: 22px;
+	width: 22px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .35s;
+	transition: .35s;
+}
+
+input:checked + .switch-slider
+{
+  	background-color: rgb(16, 196, 10);
+}
+
+input:focus + .switch-slider
+{
+  	box-shadow: 0 0 1px rgb(16, 196, 10);
+}
+
+input:checked + .switch-slider:before
+{
+	-webkit-transform: translateX(28px);
+	-ms-transform: translateX(28px);
+	transform: translateX(28px);
+}
+
+.switch-slider.round
+{
+  	border-radius: 34px;
+}
+
+.switch-slider.round:before
+{
+  	border-radius: 50%;
 }

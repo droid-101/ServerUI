@@ -70,6 +70,22 @@ function requestHandler(request, response)
 						}
 					);
 				}
+				else if (body.split(" ")[0] == "addPlayer")
+				{
+					serverCommand("/whitelist add " + body.split(" ")[1]);
+				}
+				else if (body.split(" ")[0] == "removePlayer")
+				{
+					serverCommand("/whitelist remove " + body.split(" ")[1])
+				}
+				else if (body.split(" ")[0] == "op")
+				{
+					serverCommand("/op " + body.split(" ")[1])
+				}
+				else if (body.split(" ")[0] == "deop")
+				{
+					serverCommand("/deop " + body.split(" ")[1])
+				}
 			}
 		);
 	}
@@ -116,6 +132,22 @@ function requestHandler(request, response)
 		else if (target == "/whitelist")
 		{
 			fs.readFile("whitelist.json",
+				function(err, data)
+				{
+					if (err)
+					{
+						throw err;
+					}
+
+					response.writeHead(200, {"Content-Type": "text/plain"});
+					response.write(data.toString());
+					response.end();
+				}
+			);
+		}
+		else if (target == "/ops")
+		{
+			fs.readFile("ops.json",
 				function(err, data)
 				{
 					if (err)
@@ -239,6 +271,12 @@ function startServer()
 
 function serverCommand(command)
 {
+	if (!online)
+	{
+		console.log("Server is offline: Command cannot be executed");
+		return;
+	}
+
 	server.stdin.write(command + "\n");
 }
 
@@ -290,7 +328,7 @@ function propertiesToJSON(properties)
 
 function JSONtoProperties(jsonData)
 {
-	let properties = "Minecraft Server Settings\n";
+	let properties = "#Minecraft Server Settings\n";
 	jsonData = JSON.parse(jsonData);
 
 	for (key in jsonData)
