@@ -55,9 +55,9 @@ function requestHandler(request, response)
 						}
 					);
 				}
-				else if (body.split("^")[0] == "properties")
+				else if (body.split("*")[0] == "properties")
 				{
-					let propertiesJSON = body.split("^")[1];
+					let propertiesJSON = body.split("*")[1];
 					let properties = JSONtoProperties(propertiesJSON);
 
 					fs.writeFile("server.properties", properties,
@@ -86,6 +86,10 @@ function requestHandler(request, response)
 				else if (body.split(" ")[0] == "deop")
 				{
 					serverCommand("/deop " + body.split(" ")[1]);
+				}
+				else if (body.split("*")[0] == "setWorld")
+				{
+					setWorld(body.split("*")[1]);
 				}
 			}
 		);
@@ -183,6 +187,10 @@ function requestHandler(request, response)
 					response.end();
 				}
 			);
+		}
+		else if (target == "/currentWorld")
+		{
+			currentWorld(response);
 		}
 		else if (target == "/ram")
 		{
@@ -353,6 +361,49 @@ function JSONtoProperties(jsonData)
 	}
 
 	return properties;
+}
+
+function setWorld(name)
+{
+	if (serverRunning())
+	{
+		console.log("Server running: World cannot be changed");
+		return;
+	}
+
+	let setWorld = spawn('../repo/tools/set-world.sh', [name]);
+
+	setWorld.stdout.on('data',
+		function(data)
+		{
+			console.log(`${data}`);
+		}
+	);
+}
+
+function currentWorld(response)
+{
+	let currentWorld = spawn('ls', ['-l', "world"]);
+	let world = "";
+
+	currentWorld.stdout.on('data',
+		function(data)
+		{
+			data = data.toString();
+			data = data.split("\n")[0];
+			data = data.split("/");
+			world = data[data.length - 1];
+		}
+	);
+
+	currentWorld.on('close',
+		function(code)
+		{
+			response.writeHead(200, {"Content-Type": "text/plain"});
+			response.write(world);
+			response.end();
+		}
+	);
 }
 
 function getFrontendResource(target, response)

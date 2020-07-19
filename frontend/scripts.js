@@ -3,6 +3,7 @@ const PORT = "8080";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 var propertiesEditable = true;
 var addingPlayer = false;
+var worlds = {};
 
 function switchTab(name)
 {
@@ -80,12 +81,15 @@ function switchTab(name)
 				for (i = 0; i < target.length - 1; i++)
 				{
 					let line = "<p>";
-					line += target[i];
-					line += "<button class='deleteWorld' id='delete`" + target[i] + "' onclick='deleteWorld(this.id)'>-</button>";
+					line += "<button class='world' id='setWorld*" + target[i] + "' onclick='selectWorld(this.id)'>" + target[i] + "</button>";
+					line += "<button class='deleteWorld' id='delete*" + target[i] + "' onclick='deleteWorld(this.id)'>-</button>";
 					line += "</p>";
-
 					document.getElementById("world-list").innerHTML += line;
+
+					worlds[i] = target[i];
 				}
+
+				getCurrentWorld();
 			}
 		);
 	}
@@ -249,10 +253,10 @@ function saveProperties()
 				properties[key] = document.getElementById(boxID).value;
 			}
 
-			console.log("properties^" + JSON.stringify([properties]))
+			console.log("properties*" + JSON.stringify([properties]))
 			console.log(properties);
 
-			sendData("properties^" + JSON.stringify(properties));
+			sendData("properties*" + JSON.stringify(properties));
 			propertiesEditable = false;
 
 			setTimeout(function() {editProperties();}, 1000);
@@ -370,6 +374,34 @@ function editOps(id)
 	{
 		sendData("deop " + id.split("-")[1]);
 	}
+}
+
+function selectWorld(id)
+{
+	sendData(id);
+
+	setTimeout(getCurrentWorld, 500)
+}
+
+function getCurrentWorld()
+{
+	requestData("currentWorld",
+		function(target)
+		{
+			for (key in worlds)
+			{
+				if (worlds[key] == target)
+				{
+					target = "setWorld*" + target;
+					document.getElementById(target).style.color = "rgb(8, 179, 8)";
+				}
+				else
+				{
+					document.getElementById("setWorld*" + worlds[key]).style.color = "black";
+				}
+			}
+		}
+	);
 }
 
 function init()

@@ -142,7 +142,7 @@ html body
 
 .note
 {
-	color: rgb(44, 163, 60);
+	color: rgba(105, 105, 105, 0.753);
 }
 
 .tab p:not(.subtitle)
@@ -292,6 +292,25 @@ html body
 .whitelist
 {
 	width: 78%;
+}
+
+.world-list
+{
+	width: 78%;
+}
+
+.world
+{
+	border: none;
+	background: none;
+	font-size: 20pt;
+	font-family: monospace;
+	font-weight: 700;
+	cursor: pointer;
+}
+.world:hover
+{
+	color: rgb(3, 160, 3);
 }
 
 .switch
