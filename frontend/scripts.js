@@ -75,13 +75,19 @@ function switchTab(name)
 		requestData("worlds",
 			function(target)
 			{
-				target = target.split(",");
 				document.getElementById("world-list").innerHTML = "";
 
-				for (i = 0; i < target.length - 1; i++)
+				if (target == "")
+				{
+					return;
+				}
+
+				target = target.split(",");
+
+				for (i = 0; i < target.length; i++)
 				{
 					let line = "<p>";
-					line += "<button class='world' id='setWorld*" + target[i] + "' onclick='selectWorld(this.id)'>" + target[i] + "</button>";
+					line += "<button class='world' id='setWorld*" + target[i] + "' onclick='selectWorld(\"" + target[i] + "\")'>" + target[i] + "</button>";
 					line += "<button class='deleteWorld' id='delete*" + target[i] + "' onclick='deleteWorld(this.id)'>-</button>";
 					line += "</p>";
 					document.getElementById("world-list").innerHTML += line;
@@ -100,7 +106,7 @@ function switchTab(name)
 
 function pressButton(action)
 {
-	sendData(action);
+	sendData(action, "");
 	setTimeout(getStatus, 5000);
 }
 
@@ -130,13 +136,22 @@ function requestData(target, handler)
 	}
 }
 
-function sendData(data)
+function sendData(target, data)
 {
 	var request = new XMLHttpRequest();
 	request.timeout = 10000;
-	request.open("POST", SERVER_URL);
+	request.open("POST", generateURL(target));
 	request.setRequestHeader("Content-Type", "text/plain");
 	request.send(data);
+}
+
+function sendWorld(file)
+{
+	var request = new XMLHttpRequest();
+	request.timeout = 10000;
+	request.open("POST", generateURL("addWorld"));
+	request.setRequestHeader("Content-Type", "application/x-zip-compressed");
+	request.send(file);
 }
 
 function getStatus()
@@ -180,7 +195,7 @@ function sendRAM()
 {
 	let value = document.getElementById("slider").value;
 	value = Math.trunc(value / 1024) * 1024;
-	sendData("RAM: " + value);
+	sendData("ram", value.toString());
 }
 
 function getRAM()
@@ -253,10 +268,10 @@ function saveProperties()
 				properties[key] = document.getElementById(boxID).value;
 			}
 
-			console.log("properties*" + JSON.stringify([properties]))
+			console.log("properties: " + JSON.stringify([properties]))
 			console.log(properties);
 
-			sendData("properties*" + JSON.stringify(properties));
+			sendData("properties", JSON.stringify(properties));
 			propertiesEditable = false;
 
 			setTimeout(function() {editProperties();}, 1000);
@@ -288,7 +303,7 @@ function toggleAdd()
 function addPlayer()
 {
 	let player = document.getElementById("newPlayer").value;
-	sendData("addPlayer " + player);
+	sendData("addPlayer", player);
 
 	addingPlayer = true;
 	setTimeout(function()
@@ -328,8 +343,8 @@ function addPlayer()
 
 function removePlayer(id)
 {
-	player = "removePlayer " + id.split("-")[1];
-	sendData(player);
+	let player = id.split("-")[1];
+	sendData("removePlayer", player);
 
 	setTimeout(function()
 	{
@@ -366,21 +381,22 @@ function removePlayer(id)
 
 function editOps(id)
 {
+	let player = id.split("-")[1];
+
 	if (document.getElementById(id).checked)
 	{
-		sendData("op " + id.split("-")[1]);
+		sendData("op", player);
 	}
 	else
 	{
-		sendData("deop " + id.split("-")[1]);
+		sendData("deop", player);
 	}
 }
 
-function selectWorld(id)
+function selectWorld(world)
 {
-	sendData(id);
-
-	setTimeout(getCurrentWorld, 500)
+	sendData("setWorld", world);
+	setTimeout(switchTab("worlds"), 500)
 }
 
 function getCurrentWorld()
@@ -388,20 +404,33 @@ function getCurrentWorld()
 	requestData("currentWorld",
 		function(target)
 		{
-			for (key in worlds)
+			if (target == null || target == "")
 			{
-				if (worlds[key] == target)
-				{
-					target = "setWorld*" + target;
-					document.getElementById(target).style.color = "rgb(8, 179, 8)";
-				}
-				else
-				{
-					document.getElementById("setWorld*" + worlds[key]).style.color = "black";
-				}
+				return;
 			}
+
+			document.getElementById("setWorld*" + target).style.color = "rgb(8, 179, 8)";
 		}
 	);
+}
+
+function triggerUpload()
+{
+	document.getElementById('addWorld').click();
+}
+
+function addWorld(file)
+{
+	file = file[0];
+	sendWorld(file);
+	setTimeout(switchTab, 2500, "worlds")
+}
+
+function deleteWorld(id)
+{
+	world = id.split("*")[1]
+	sendData("deleteWorld", world);
+	setTimeout(switchTab, 2500, "worlds")
 }
 
 function init()

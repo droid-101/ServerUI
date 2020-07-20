@@ -22,9 +22,9 @@
 
 	<span class='controls'>
 		<span class="buttons">
-			<button class="start" onclick="pressButton('start')"><img class='image' src="icons/buttons/start.png"></button>
-			<button class="stop" onclick="pressButton('stop')"><img class='image' src="icons/buttons/stop.png"></button>
-			<button class="restart" onclick="pressButton('restart')"><img class='image' src="icons/buttons/restart.png"></button>
+			<button class="start" onclick="pressButton('start')"><img class='image' src="icons/start.png"></button>
+			<button class="stop" onclick="pressButton('stop')"><img class='image' src="icons/stop.png"></button>
+			<button class="restart" onclick="pressButton('restart')"><img class='image' src="icons/restart.png"></button>
 		</span>
 	</span>
 </div>
@@ -125,7 +125,10 @@
 				WORLDS
 
 				<span>
-					<button class="add" title="Add World">+</button>
+					<button class="add" id="add" title="Add World" onclick="triggerUpload()">+</button>
+				</span>
+				<span>
+					<input type="file" title="Add World" class="addWorld" id="addWorld" accept="application/x-zip-compressed" oninput="addWorld(files)">
 				</span>
 			</p>
 			<div>

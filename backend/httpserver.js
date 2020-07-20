@@ -21,31 +21,39 @@ website.listen(PORT);
 
 function requestHandler(request, response)
 {
-	let body = "";
+	let target = request.url;
+	let body = [];
+
+	console.log(request.method, target);
 
 	if (request.method == "POST")
 	{
-		request.on('data', (chunk) => {body += chunk.toString()});
+		request.on('data', (chunk) => {body.push(chunk)});
 		request.on('end',
 			function()
 			{
-				console.log(request.method, body);
-				if (body == "start")
+				body = Buffer.concat(body)
+
+				if (target != "/addWorld")
+				{
+					body = body.toString();
+				}
+
+				if (target == "/start")
 				{
 					startServer();
 				}
-				else if (body == "stop")
+				else if (target == "/stop")
 				{
 					stopServer();
 				}
-				else if (body == "restart")
+				else if (target == "/restart")
 				{
 					restartServer();
 				}
-				else if (body.split(" ")[0] == "RAM:")
+				else if (target == "/ram")
 				{
-					let value = body.split(" ")[1];
-					fs.writeFile("ram.txt", value,
+					fs.writeFile("ram.txt", body,
 						function(err)
 						{
 							if (err)
@@ -55,10 +63,9 @@ function requestHandler(request, response)
 						}
 					);
 				}
-				else if (body.split("*")[0] == "properties")
+				else if (target == "/properties")
 				{
-					let propertiesJSON = body.split("*")[1];
-					let properties = JSONtoProperties(propertiesJSON);
+					let properties = JSONtoProperties(body);
 
 					fs.writeFile("server.properties", properties,
 						function(err)
@@ -70,26 +77,72 @@ function requestHandler(request, response)
 						}
 					);
 				}
-				else if (body.split(" ")[0] == "addPlayer")
+				else if (target == "/addPlayer")
 				{
-					serverCommand("/whitelist add " + body.split(" ")[1]);
+					serverCommand("/whitelist add " + body);
 				}
-				else if (body.split(" ")[0] == "removePlayer")
+				else if (target == "/removePlayer")
 				{
-					serverCommand("/whitelist remove " + body.split(" ")[1]);
-					serverCommand("/deop " + body.split(" ")[1]);
+					serverCommand("/deop " + body);
+					serverCommand("/whitelist remove " + body);
 				}
-				else if (body.split(" ")[0] == "op")
+				else if (target == "/op")
 				{
-					serverCommand("/op " + body.split(" ")[1]);
+					serverCommand("/op " + body);
 				}
-				else if (body.split(" ")[0] == "deop")
+				else if (target == "/deop")
 				{
-					serverCommand("/deop " + body.split(" ")[1]);
+					serverCommand("/deop " + body);
 				}
-				else if (body.split("*")[0] == "setWorld")
+				else if (target == "/setWorld")
 				{
-					setWorld(body.split("*")[1]);
+					setWorld(body);
+				}
+				else if (target == "/addWorld")
+				{
+					fs.writeFile("../temp/world.zip", body,
+						function(err)
+						{
+							if (err)
+							{
+								return console.log(err);
+							}
+
+							let addWorld = spawn('../repo/tools/add-world.sh');
+
+							addWorld.stdout.on('data',
+								function(data)
+								{
+									console.log(data);
+								}
+							);
+
+							addWorld.on('close',
+								function(code)
+								{
+									console.log("Attempted to add a new world");
+								}
+							);
+						}
+					);
+				}
+				else if (target == "/deleteWorld")
+				{
+					let deleteWorld = spawn('../repo/tools/archive-world.sh', [body]);
+
+					deleteWorld.stdout.on('data',
+						function(data)
+						{
+							console.log(data);
+						}
+					);
+
+					deleteWorld.on('close',
+						function(code)
+						{
+							console.log("Attempted to archive world")
+						}
+					);
 				}
 			}
 		);
@@ -97,9 +150,6 @@ function requestHandler(request, response)
 	else if (request.method == "GET")
 	{
 		response.setHeader("Access-Control-Allow-Origin", "*");
-
-		let target = request.url;
-		console.log(request.method, target);
 
 		if (target == "/mcserver")
 		{
@@ -182,6 +232,18 @@ function requestHandler(request, response)
 				function(code)
 				{
 					worlds = worlds.split("\n");
+
+					for (var i = 0; i < worlds.length; i++)
+					{
+						worlds[i] = worlds[i].replace(/'/g, "");
+
+						if (worlds[i] == "")
+						{
+							worlds.splice(i, 1);
+						}
+					}
+
+					console.log(worlds)
 					response.writeHead(200, {"Content-Type": "text/plain"});
 					response.write(worlds.toString());
 					response.end();

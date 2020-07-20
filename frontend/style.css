@@ -47,31 +47,31 @@ html body
 
 .image
 {
-	width: 42px;
+	width: 50px;
 	height: 50px;
 }
 
 .start, .stop, .restart
 {
-	border-radius: 10px;
+	background: none;
 	border: none;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+
 }
 
 .start
 {
-	background-color: rgba(14, 216, 14, 0.89);
 	margin: auto;
 }
 
 .stop
 {
-	background-color: rgba(255, 0, 0, 0.835);
 	margin: auto;
 }
 
 .restart
 {
-	background-color: rgba(255, 208, 1, 0.938);
 	margin: auto;
 }
 
@@ -190,18 +190,20 @@ html body
 
 .slider::-moz-range-thumb
 {
-  width: 12px;
-  height: 24px;
-  border-radius: 5px;
-  background: rgb(55, 168, 55);
-  outline: none;
-  cursor: pointer;
-  position: relative;
-  z-index: 6;
+	border: none;
+	width: 16px;
+	height: 32px;
+	border-radius: 5px;
+	background: rgb(55, 168, 55);
+	outline: none;
+	cursor: pointer;
+	position: relative;
+	z-index: 6;
 }
 
 .save-changes, .edit, .refresh, .add, .remove
 {
+	border: none;
 	font-size: 24pt;
 	font-family: monospace;
 	font-weight: 700;
@@ -211,6 +213,8 @@ html body
 	float: right;
 	margin-top: 10px;
 	margin-left: 10px;
+	position: relative;
+	right: 2px;
 }
 
 .edit
@@ -274,6 +278,7 @@ html body
 
 .deletePlayer, .deleteWorld
 {
+	border: none;
 	width: 30px;
 	height: 30px;
 	float: right;
@@ -283,7 +288,7 @@ html body
 	color: white;
 	font-size: 16pt;
 	font-family: monospace;
-	font-weight: 700;
+	font-weight: 900;
 	border-radius: 10px;
 	position: relative;
 	top: -1px;
@@ -381,4 +386,9 @@ input:checked + .switch-slider:before
 .switch-slider.round:before
 {
   	border-radius: 50%;
+}
+
+.addWorld
+{
+	display: none;
 }
