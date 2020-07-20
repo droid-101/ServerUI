@@ -7,6 +7,8 @@ const PORT = 8080;
 
 var server = null;
 var error = false;
+var commandOutput = null;
+var done = false;
 
 var contentTypes = {
 	".css": "text/css",
@@ -270,6 +272,21 @@ function requestHandler(request, response)
 				}
 			);
 		}
+		else if (target == "/playersOnline")
+		{
+			response.writeHead(200, {"Content-Type": "text/plain"});
+
+			if (serverRunning())
+			{
+				playersOnline(response);
+			}
+			else
+			{
+				response.write("Server Offline*" + "Server Offline");
+				response.end();
+				console.log("Cannot get player count: Server is offline")
+			}
+		}
 		else if (target == "/status")
 		{
 			let currentStatus = "";
@@ -302,12 +319,12 @@ function requestHandler(request, response)
 
 function serverRunning()
 {
-	if (server == null)
+	if (server == null || !done)
 	{
 		return false;
 	}
 
-	if (server.exitCode == null)
+	if (server.exitCode == null && done)
 	{
 		return true;
 	}
@@ -341,8 +358,14 @@ function startServer()
 			console.log("Minecraft server starting with " + ram + " of RAM");
 
 			server.stdout.on('data', (data) => {
-			console.log(`${data}`);
+				commandOutput = (`${data}`);
+				console.log(commandOutput);
+				if (!done)
+				{
+					checkForDone(commandOutput);
+				}
 			});
+
 
 			server.stderr.on('data', (data) => {
 			console.error(`${data}`);
@@ -377,6 +400,7 @@ function stopServer()
 	console.log("Stopping Minecraft server");
 	serverCommand("/stop");
 	server = null;
+	done = false;
 }
 
 function restartServer()
@@ -466,6 +490,55 @@ function currentWorld(response)
 			response.end();
 		}
 	);
+}
+
+function checkForDone(output)
+{
+	if (output.match(/\[Server thread\/INFO\]: Done/gi) != null)
+	{
+		done = true;
+	}
+}
+
+function playersOnline(response)
+{
+	if (!serverRunning())
+	{
+		response.write("Server Offline*" + "Server Offline");
+		response.end();
+		console.log("Cannot get player count: Server is offline")
+		return;
+	}
+
+
+	serverCommand("/list");
+
+	setTimeout(function()
+	{
+		let players = commandOutput;
+		if (players.match(/players online:/gi) == null)
+		{
+			response.write("Unknown*Unknown");
+			console.log("Could not get player online count")
+		}
+		else
+		{
+			let playerCount = players.split(" ");
+			let playersOnline = players.split(": ")[2];
+			console.log("Sending player online count");
+
+			if (playerCount[5] == 0)
+			{
+				playersOnline = "None";
+			}
+
+			playerCount = playerCount[5] + " / " + playerCount[9];
+			response.write(playerCount + "*" + playersOnline);
+		}
+
+		response.end()
+	}
+	, 500);
 }
 
 function getFrontendResource(target, response)

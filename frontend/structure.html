@@ -47,6 +47,24 @@
 				HOME
 			</p>
 			<p class="note">Note: This is a private server!</p>
+
+			<div class="slideshow-Container">
+				<div class="slide">
+					<img class="picture" src="pictures/MyHouse.png" al>
+				</div>
+				<!-- <div class="slide">
+					<img class="picture" src="">
+				</div>
+				<div class="slide">
+					<img class="picture" src="">
+				</div> -->
+
+				<div class="dots">
+					<span class="dot" onclick="currentSlide(1)"></span>
+					<span class="dot" onclick="currentSlide(2)"></span>
+					<span class="dot" onclick="currentSlide(3)"></span>
+				  </div>
+			</div>
 		</div>
 
 		<div class='tab' id='dashboard'>
@@ -55,9 +73,6 @@
 
 				<span>
 					<button class="save-changes" onclick="sendRAM()">SAVE</button>
-				</span>
-				<span>
-					<button class="refresh">REFRESH</button>
 				</span>
 			</p>
 			<div>
@@ -72,10 +87,11 @@
 
 			<p>CPU Usage: </p>
 			<p id="allocated-ram">Allocated RAM: </p>
-			<p>Server RAM Usage: </p>
-			<p>Computer RAM Usage: </p>
-			<p>Players Online: </p>
-			<p>Current World: </p>
+			<p id="server-ram">Server RAM Usage: </p>
+			<p id="linux-ram">Computer RAM Usage: </p>
+			<p id="player-count">Player Count: </p>
+			<p id="player-list">Players Online: </p>
+			<p id="active-world"></p>
 
 		</div>
 

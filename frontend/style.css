@@ -160,6 +160,24 @@ html body
 	top: 90px;
 }
 
+.slideshow-Container
+{
+	width: 100%;
+	position: relative;
+	margin: auto;
+	background-color: grey;
+}
+
+.slide
+{
+	text-align: center;
+}
+
+.dots
+{
+	text-align: center;
+}
+
 .ram-allocation
 {
 	text-align: center;
@@ -201,7 +219,7 @@ html body
 	z-index: 6;
 }
 
-.save-changes, .edit, .refresh, .add, .remove
+.save-changes, .edit, .add, .remove
 {
 	border: none;
 	font-size: 24pt;
@@ -230,11 +248,6 @@ html body
 .save
 {
 	display: none;
-}
-
-.refresh
-{
-	background-color: rgb(125, 79, 211);
 }
 
 .switch, .selectedWorld

@@ -4,6 +4,7 @@ const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 var propertiesEditable = true;
 var addingPlayer = false;
 var worlds = {};
+var statRefresh;
 
 function switchTab(name)
 {
@@ -16,6 +17,7 @@ function switchTab(name)
 
 	if (name == "settings")
 	{
+		clearInterval(statRefresh);
 		requestData("properties",
 			function(target)
 			{
@@ -32,8 +34,17 @@ function switchTab(name)
 			}
 		);
 	}
+	else if (name == "dashboard")
+	{
+		statRefresh = setInterval(function()
+		{
+			getStats();
+		}
+		, 10000);
+	}
 	else if (name == "players")
 	{
+		clearInterval(statRefresh);
 		requestData("whitelist",
 			function(target)
 			{
@@ -72,6 +83,7 @@ function switchTab(name)
 	}
 	else if (name == "worlds")
 	{
+		clearInterval(statRefresh);
 		requestData("worlds",
 			function(target)
 			{
@@ -98,6 +110,10 @@ function switchTab(name)
 				getCurrentWorld();
 			}
 		);
+	}
+	else
+	{
+		clearInterval(statRefresh);
 	}
 
 	document.getElementById(name).style.display = "block";
@@ -409,6 +425,7 @@ function getCurrentWorld()
 				return;
 			}
 
+			document.getElementById("active-world").innerHTML = "Active World: " + target;
 			document.getElementById("setWorld*" + target).style.color = "rgb(8, 179, 8)";
 		}
 	);
@@ -433,8 +450,26 @@ function deleteWorld(id)
 	setTimeout(switchTab, 2500, "worlds")
 }
 
+function getPlayers()
+{
+	requestData("playersOnline",
+		function(target)
+		{
+			document.getElementById("player-count").innerHTML = "Player Count: " + target.split("*")[0];
+			document.getElementById("player-list").innerHTML = "Players Online: " + target.split("*")[1];
+		}
+	);
+}
+
+function getStats()
+{
+	getPlayers();
+	getCurrentWorld();
+}
+
 function init()
 {
+	getStats();
 	getStatus();
 	switchTab("home");
 	getRAM();
