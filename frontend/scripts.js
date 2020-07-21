@@ -1,10 +1,13 @@
 const HOSTNAME = "firestorm.local";
 const PORT = "8080";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
+const SOCKET_URL = "ws://" + HOSTNAME + ":" + PORT;
 var propertiesEditable = true;
 var addingPlayer = false;
 var worlds = {};
 var statRefresh;
+var terminalSocket = null
+var terminalConnected = false;
 
 function switchTab(name)
 {
@@ -111,6 +114,23 @@ function switchTab(name)
 				getCurrentWorld("worlds");
 			}
 		);
+	}
+	else if (name == "terminal")
+	{
+		// requestData("terminal",
+		// 	function(target)
+		// 	{
+		// 		target.on('data', (chunk) => {
+		// 			terminalPrint(chunk);
+		// 		  });
+
+		// 		  target.on('end', (chunk) => {
+		// 			terminalPrint("ksdjhfkjsh");
+		// 		  });
+		// 	}
+		// );
+
+
 	}
 
 	document.getElementById(name).style.display = "block";
@@ -494,12 +514,72 @@ function getStats()
 	getCurrentWorld("dashboard");
 }
 
+function currentSlide(id)
+{
+	for (i = 1; i <= 3; i++)
+	{
+		document.getElementById("slide-" + i).style.display = "none";
+	}
+
+	document.getElementById("slide-" + id).style.display = "block";
+}
+
+function terminalPrint(data)
+{
+	var console = document.getElementById("terminal-window");
+	console.innerHTML += data + "<br/>";
+	console.scrollTop = console.scrollHeight;
+}
+
+function terminalSend(data)
+{
+	if (terminalConnected)
+	{
+		terminalSocket.send(data);
+	}
+}
+
+function openTerminalSocket()
+{
+	terminalSocket = new WebSocket(SOCKET_URL);
+
+	terminalSocket.onopen = function()
+	{
+		terminalConnected = true;
+	}
+
+	terminalSocket.onmessage = function(message)
+	{
+		terminalPrint(message.data);
+	}
+
+	terminalSocket.onerror = function(error)
+	{
+		console.log(`WebSocket error: ${error}`);
+	}
+
+	var prompt = document.getElementById("terminal-prompt");
+
+	prompt.addEventListener("keyup",
+		function(event)
+		{
+			if (event.keyCode === 13)
+			{
+				event.preventDefault();
+				terminalSend(prompt.value);
+				prompt.value = "";
+			}
+		}
+	);
+}
+
 function init()
 {
 	getStats();
 	getStatus();
+	setInterval(getStatus, 30000);
 	switchTab("home");
 	getRAM();
-
-	setInterval(getStatus, 30000);
+	openTerminalSocket();
+	currentSlide(1);
 }

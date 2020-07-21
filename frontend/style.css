@@ -160,23 +160,20 @@ html body
 	top: 90px;
 }
 
-.slideshow-Container
+.slideshow
 {
+	position: fixed;
+	left: 200px;
+	top: -90px;
 	width: 100%;
-	position: relative;
-	margin: auto;
-	background-color: grey;
+	height: 112%;
+	overflow-x: scroll;
 }
 
 .slide
 {
-	text-align: center;
-}
-
-.dots
-{
-	size: 200%;
-	text-align: center;
+	width: 100%;
+	height: 100%;
 }
 
 .ram-allocation
@@ -405,4 +402,34 @@ input:checked + .switch-slider:before
 .addWorld
 {
 	display: none;
+}
+
+.terminal-window
+{
+	height: 500px;
+	width:900px;
+	border:10px solid rgb(0, 0, 0);
+	font:16px Consolas;
+	overflow:auto;
+	background-color: black;
+	color: white;
+	position: relative;
+	left: 300px;
+}
+
+.terminal-prompt
+{
+	background-color: rgb(233, 229, 229);
+	font-size: 16pt;
+	font-family: monospace;
+	font-weight: 700;
+	border-style: solid;
+	border: none;
+	border-radius: 5px;
+	position: relative;
+	bottom: 1px;
+	padding: 5px;
+	top: 10px;
+	left: 300px;
+	width:910px;
 }

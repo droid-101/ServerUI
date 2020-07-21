@@ -3,6 +3,7 @@ var fs = require("fs");
 var path = require('path');
 var pidusage = require('pidusage');
 var spawn = require('child_process').spawn;
+var WebSocket = require('ws');
 
 const PORT = 8080;
 
@@ -10,6 +11,9 @@ var server = null;
 var error = false;
 var commandOutput = null;
 var done = false;
+var socketServer = null;
+var terminalSocket = null;
+var streamTerminal= false;
 
 var contentTypes = {
 	".css": "text/css",
@@ -20,6 +24,7 @@ var contentTypes = {
 process.chdir("../../server");
 
 var website = http.createServer(requestHandler);
+openSocketServer();
 website.listen(PORT);
 
 function requestHandler(request, response)
@@ -336,6 +341,19 @@ function requestHandler(request, response)
 			response.write(currentStatus);
 			response.end();
 		}
+		else if (target == "/terminal")
+		{
+			if (!serverRunning())
+			{
+				response.writeHead(200, {"Content-Type": "text/plain"});
+				response.write("The server is not running");
+				response.end();
+			}
+			else
+			{
+				// server.stdout.pipe(response);
+			}
+		}
 		else
 		{
 			getFrontendResource(target, response);
@@ -386,6 +404,7 @@ function startServer()
 			server.stdout.on('data', (data) => {
 				commandOutput = (`${data}`);
 				console.log(commandOutput);
+				sendTerminalOutput(commandOutput);
 				if (!done)
 				{
 					checkForDone(commandOutput);
@@ -613,4 +632,47 @@ function getFrontendResource(target, response)
 			response.end();
 		}
 	);
+}
+
+function openSocketServer()
+{
+	socketServer = new WebSocket.Server({ server: website })
+
+	socketServer.on('connection',
+		function(socket)
+		{
+			socket.on('message',
+				function(message)
+				{
+					let command = `${message}`;
+					console.log("Received command " + command);
+
+					if (command == "stop" || command == "/stop")
+					{
+						terminalSocket.send("Please use the STOP button");
+					}
+					else
+					{
+						serverCommand(command);
+					}
+				}
+			);
+
+			streamTerminal = true;
+			terminalSocket = socket;
+			console.log("Connected server console to client")
+			terminalSocket.send("Connected to Minecraft server console .......")
+		}
+	);
+}
+
+function sendTerminalOutput(data)
+{
+	if (!streamTerminal)
+	{
+		console.log("Server terminal streaming disabled")
+		return;
+	}
+
+	terminalSocket.send(data)
 }
