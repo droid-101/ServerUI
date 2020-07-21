@@ -8,6 +8,7 @@ var statRefresh;
 
 function switchTab(name)
 {
+	clearInterval(statRefresh);
 	var tabs = document.getElementsByClassName("tab");
 
 	for (var i = 0; i < tabs.length; i++)
@@ -17,7 +18,7 @@ function switchTab(name)
 
 	if (name == "settings")
 	{
-		clearInterval(statRefresh);
+
 		requestData("properties",
 			function(target)
 			{
@@ -36,6 +37,8 @@ function switchTab(name)
 	}
 	else if (name == "dashboard")
 	{
+		getStats();
+
 		statRefresh = setInterval(function()
 		{
 			getStats();
@@ -44,7 +47,6 @@ function switchTab(name)
 	}
 	else if (name == "players")
 	{
-		clearInterval(statRefresh);
 		requestData("whitelist",
 			function(target)
 			{
@@ -83,7 +85,6 @@ function switchTab(name)
 	}
 	else if (name == "worlds")
 	{
-		clearInterval(statRefresh);
 		requestData("worlds",
 			function(target)
 			{
@@ -107,13 +108,9 @@ function switchTab(name)
 					worlds[i] = target[i];
 				}
 
-				getCurrentWorld();
+				getCurrentWorld("worlds");
 			}
 		);
-	}
-	else
-	{
-		clearInterval(statRefresh);
 	}
 
 	document.getElementById(name).style.display = "block";
@@ -204,7 +201,7 @@ function getStatus()
 function setValue(value)
 {
 	value = Math.trunc(value / 1024) * 1024;
-	document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + value + " MB (" + Math.trunc(value / 1024) + " GB)";
+	document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + value + "MB (" + Math.trunc(value / 1024) + "GB)";
 }
 
 function sendRAM()
@@ -219,7 +216,7 @@ function getRAM()
 	requestData("ram",
 		function(target)
 		{
-			document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + target  + " MB (" + target[0] + " GB)";
+			document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + target  + "MB (" + target[0] + "GB)";
 			document.getElementById("slider").value = target;
 		}
 	);
@@ -415,7 +412,7 @@ function selectWorld(world)
 	setTimeout(switchTab("worlds"), 500)
 }
 
-function getCurrentWorld()
+function getCurrentWorld(tab)
 {
 	requestData("currentWorld",
 		function(target)
@@ -425,8 +422,14 @@ function getCurrentWorld()
 				return;
 			}
 
-			document.getElementById("active-world").innerHTML = "Active World: " + target;
-			document.getElementById("setWorld*" + target).style.color = "rgb(8, 179, 8)";
+			if (tab == "dashboard")
+			{
+				document.getElementById("active-world").innerHTML = "Active World: " + target;
+			}
+			else
+			{
+				document.getElementById("setWorld*" + target).style.color = "rgb(8, 179, 8)";
+			}
 		}
 	);
 }
@@ -461,10 +464,34 @@ function getPlayers()
 	);
 }
 
+function getRAMusage()
+{
+	requestData("serverRAM",
+		function(target)
+		{
+			document.getElementById("server-ram").innerHTML = "Server RAM Usage: " + target;
+		}
+	);
+}
+
+function getSystemStats()
+{
+	requestData("systemStats",
+		function(target)
+		{
+			let usage = target.split(" ");
+			document.getElementById("cpu-usage").innerHTML = "CPU Usage: " + usage[0];
+			document.getElementById("linux-ram").innerHTML = "Machine RAM Usage: " + usage[1];
+		}
+	);
+}
+
 function getStats()
 {
+	getSystemStats();
+	getRAMusage();
 	getPlayers();
-	getCurrentWorld();
+	getCurrentWorld("dashboard");
 }
 
 function init()

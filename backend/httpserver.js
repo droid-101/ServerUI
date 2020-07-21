@@ -1,6 +1,7 @@
 var http = require("http");
 var fs = require("fs");
 var path = require('path');
+var pidusage = require('pidusage');
 var spawn = require('child_process').spawn;
 
 const PORT = 8080;
@@ -287,6 +288,31 @@ function requestHandler(request, response)
 				console.log("Cannot get player count: Server is offline")
 			}
 		}
+		else if (target == "/systemStats")
+		{
+			let stats = spawn('../repo/tools/system-stats.sh');
+			let usage = "";
+
+			stats.stdout.on('data',
+				function(data)
+				{
+					usage = data.toString();
+				}
+			);
+
+			stats.on('close',
+				function(code)
+				{
+					response.writeHead(200, {"Content-Type": "text/plain"});
+					response.write(usage);
+					response.end();
+				}
+			);
+		}
+		else if (target == "/serverRAM")
+		{
+			serverRAM(response);
+		}
 		else if (target == "/status")
 		{
 			let currentStatus = "";
@@ -539,6 +565,30 @@ function playersOnline(response)
 		response.end()
 	}
 	, 500);
+}
+
+function serverRAM(response)
+{
+	if (serverRunning())
+	{
+		pidusage(server.pid,
+			function(err, stats)
+			{
+				let usage = (stats["memory"] * Math.pow(10, -9));
+				usage = Math.round(usage * 10) / 10;
+				usage = usage.toString() + "GB"
+				response.writeHead(200, {"Content-Type": "text/plain"});
+				response.write(usage)
+				response.end();
+			}
+		);
+	}
+	else
+	{
+		response.writeHead(200, {"Content-Type": "text/plain"});
+		response.write("Server Offline")
+		response.end();
+	}
 }
 
 function getFrontendResource(target, response)
