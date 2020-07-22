@@ -32,4 +32,9 @@ ram_stats()
     done
 }
 
-echo "`cpu_stats`% `ram_stats`B"
+ip()
+{
+    echo `dig +short myip.opendns.com @resolver1.opendns.com`
+}
+
+echo "`cpu_stats`% `ram_stats`B" `ip`

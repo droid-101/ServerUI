@@ -5,13 +5,17 @@ const SOCKET_URL = "ws://" + HOSTNAME + ":" + PORT;
 var propertiesEditable = true;
 var addingPlayer = false;
 var worlds = {};
+var playerList = {};
 var statRefresh;
+var playerRefresh;
 var terminalSocket = null
 var terminalConnected = false;
+var serverPort;
 
 function switchTab(name)
 {
 	clearInterval(statRefresh);
+	clearInterval(playerRefresh);
 	var tabs = document.getElementsByClassName("tab");
 
 	for (var i = 0; i < tabs.length; i++)
@@ -21,7 +25,6 @@ function switchTab(name)
 
 	if (name == "settings")
 	{
-
 		requestData("properties",
 			function(target)
 			{
@@ -50,6 +53,13 @@ function switchTab(name)
 	}
 	else if (name == "players")
 	{
+		playerList = {};
+		playerRefresh = setInterval(function()
+		{
+			getPlayers("players");
+		}
+		, 30000);
+
 		requestData("whitelist",
 			function(target)
 			{
@@ -61,10 +71,14 @@ function switchTab(name)
 					line += whitelist[player]["name"];
 					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
 					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
+					line += "<span class='onlineStatus' id='online-" + whitelist[player]["name"] + "'></span>"
 					line += "</p>";
 
 					document.getElementById("whitelist").innerHTML += line;
+					playerList[player] = whitelist[player]["name"];
 				}
+
+				getPlayers("players");
 
 				document.getElementById("newPlayer").style.display = "none";
 				document.getElementById("savePlayers").style.display = "none";
@@ -100,7 +114,7 @@ function switchTab(name)
 
 				target = target.split(",");
 
-				for (i = 0; i < target.length; i++)
+				for (let i = 0; i < target.length; i++)
 				{
 					let line = "<p>";
 					line += "<button class='world' id='setWorld*" + target[i] + "' onclick='selectWorld(\"" + target[i] + "\")'>" + target[i] + "</button>";
@@ -114,23 +128,6 @@ function switchTab(name)
 				getCurrentWorld("worlds");
 			}
 		);
-	}
-	else if (name == "terminal")
-	{
-		// requestData("terminal",
-		// 	function(target)
-		// 	{
-		// 		target.on('data', (chunk) => {
-		// 			terminalPrint(chunk);
-		// 		  });
-
-		// 		  target.on('end', (chunk) => {
-		// 			terminalPrint("ksdjhfkjsh");
-		// 		  });
-		// 	}
-		// );
-
-
 	}
 
 	document.getElementById(name).style.display = "block";
@@ -335,6 +332,7 @@ function toggleAdd()
 
 function addPlayer()
 {
+	playerList = {};
 	let player = document.getElementById("newPlayer").value;
 	sendData("addPlayer", player);
 
@@ -352,12 +350,15 @@ function addPlayer()
 					line += whitelist[player]["name"];
 					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
 					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
+					line += "<span class='onlineStatus' id='online-" + whitelist[player]["name"] + "'></span>";
 					line += "</p>";
 
 					document.getElementById("whitelist").innerHTML += line;
+					playerList[player] = whitelist[player]["name"];
 				}
-				console.log(addingPlayer)
+
 				toggleAdd();
+				getPlayers("players");
 			}
 		);
 
@@ -376,6 +377,7 @@ function addPlayer()
 
 function removePlayer(id)
 {
+	playerList = {};
 	let player = id.split("-")[1];
 	sendData("removePlayer", player);
 
@@ -392,10 +394,14 @@ function removePlayer(id)
 					line += whitelist[player]["name"];
 					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
 					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
+					line += "<span class='onlineStatus' id='online-" + whitelist[player]["name"] + "'></span>";
 					line += "</p>";
 
 					document.getElementById("whitelist").innerHTML += line;
+					playerList[player] = whitelist[player]["name"];
 				}
+
+				getPlayers("players");
 			}
 		);
 
@@ -473,13 +479,36 @@ function deleteWorld(id)
 	setTimeout(switchTab, 2500, "worlds")
 }
 
-function getPlayers()
+function getPlayers(tab)
 {
 	requestData("playersOnline",
 		function(target)
 		{
-			document.getElementById("player-count").innerHTML = "Player Count: " + target.split("*")[0];
-			document.getElementById("player-list").innerHTML = "Players Online: " + target.split("*")[1];
+			for (player in playerList)
+			{
+				document.getElementById("online-" + playerList[player]).style.backgroundColor = "rgb(212, 212, 212)";
+			}
+
+			if (tab == "players")
+			{
+				target = target.split("*")[1];
+				target = target.split(", ");
+
+				for (let i = 0; i < target.length; i++)
+				{
+					if (target[i] == "Server Offline" || target[i] == "None")
+					{
+						return;
+					}
+
+					target[i]
+					document.getElementById("online-" + target[i]).style.backgroundColor = "rgb(40, 224, 23)";
+				}
+			}
+			else if (tab == "dashboard")
+			{
+				document.getElementById("player-count").innerHTML = "Player Count: " + target.split("*")[0];
+			}
 		}
 	);
 }
@@ -499,9 +528,10 @@ function getSystemStats()
 	requestData("systemStats",
 		function(target)
 		{
-			let usage = target.split(" ");
-			document.getElementById("cpu-usage").innerHTML = "CPU Usage: " + usage[0];
-			document.getElementById("linux-ram").innerHTML = "Machine RAM Usage: " + usage[1];
+			let data = target.split(" ");
+			document.getElementById("cpu-usage").innerHTML = "CPU Usage: " + data[0];
+			document.getElementById("linux-ram").innerHTML = "Machine RAM Usage: " + data[1];
+			document.getElementById("server-ip").innerHTML = "Server IP: " + data[2].trim() + ":" + serverPort;
 		}
 	);
 }
@@ -510,18 +540,8 @@ function getStats()
 {
 	getSystemStats();
 	getRAMusage();
-	getPlayers();
+	getPlayers("dashboard");
 	getCurrentWorld("dashboard");
-}
-
-function currentSlide(id)
-{
-	for (i = 1; i <= 3; i++)
-	{
-		document.getElementById("slide-" + i).style.display = "none";
-	}
-
-	document.getElementById("slide-" + id).style.display = "block";
 }
 
 function terminalPrint(data)
@@ -573,13 +593,59 @@ function openTerminalSocket()
 	);
 }
 
+function getServerPort()
+{
+	requestData("properties",
+		function(target)
+		{
+			let properties = JSON.parse(target);
+			serverPort = properties["server-port"];
+		}
+	);
+}
+
+function changeSlide(id)
+{
+
+	id = id.split("pic")[1];
+	id = parseInt(id, 10);
+	id = ++id % 3;
+	id = id.toString();
+
+	for (let i = 0; i < 3; i++)
+	{
+		document.getElementById("pic" + i).style.display = "none";
+	}
+
+	fade(id);
+
+}
+
+function fade(id)
+{
+	let opacity = 100;
+	let fadeOut = setInterval(function()
+	{
+		opacity--;
+		document.getElementById("pic" + id).style.opacity = opacity + "%";
+		document.getElementById("pic" + id).style.display = "block";
+
+		if (opacity == 0)
+		{
+			document.getElementById("pic" + id).style.display = "block";
+			clearInterval(fadeOut);
+		}
+	}, 10);
+}
+
 function init()
 {
+	changeSlide("pic2");
 	getStats();
 	getStatus();
 	setInterval(getStatus, 30000);
 	switchTab("home");
 	getRAM();
 	openTerminalSocket();
-	currentSlide(1);
+	getServerPort();
 }

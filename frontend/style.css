@@ -162,16 +162,20 @@ html body
 
 .slideshow
 {
+	background-color: black;
 	position: fixed;
-	left: 200px;
-	top: -90px;
+	left: 125px;
+	top: -85px;
 	width: 100%;
-	height: 112%;
-	overflow-x: scroll;
+	height: 110%;
+	display: block;
+	overflow-x: hidden;
+	overflow-y: hidden;
 }
 
 .slide
 {
+	display: none;
 	width: 100%;
 	height: 100%;
 }
@@ -305,6 +309,18 @@ html body
 	top: -1px;
 }
 
+.onlineStatus
+{
+	width: 15px;
+	height: 15px;
+	background-color: rgb(212, 212, 212);
+	float: right;
+	position: relative;
+	border-radius: 15px;
+	top: 8px;
+	right: 30px;
+}
+
 .whitelist
 {
 	width: 78%;
@@ -404,6 +420,17 @@ input:checked + .switch-slider:before
 	display: none;
 }
 
+.terminalContainer
+{
+	width: 100%;
+}
+
+.prompt-container
+{
+	width: 100%;
+	text-align: center;
+}
+
 .terminal-window
 {
 	height: 500px;
@@ -414,7 +441,7 @@ input:checked + .switch-slider:before
 	background-color: black;
 	color: white;
 	position: relative;
-	left: 300px;
+	margin: auto;
 }
 
 .terminal-prompt
@@ -430,6 +457,5 @@ input:checked + .switch-slider:before
 	bottom: 1px;
 	padding: 5px;
 	top: 10px;
-	left: 300px;
 	width:910px;
 }

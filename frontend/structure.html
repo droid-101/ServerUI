@@ -43,14 +43,10 @@
 	<div class='main'>
 
 		<div class='tab' id='home'>
-			<p class="subtitle">
-				HOME
-			</p>
-
 			<div class="slideshow">
-				<img class="slide" src="pictures/Minecraft.png"><img/>
-				<img class="slide" src="pictures/MyHouse.png"><img/>
-				<img class="slide" src="pictures/TheUnderworld.png"><img/>
+				<img class="slide" id="pic0" src="pictures/Minecraft.png" onclick='changeSlide(this.id)'><img/>
+				<img class="slide" id="pic1" src="pictures/MyHouse.png" onclick='changeSlide(this.id)'><img/>
+				<img class="slide" id="pic2" src="pictures/TheUnderworld.png" onclick='changeSlide(this.id)'><img/>
 			</div>
 		</div>
 
@@ -75,8 +71,8 @@
 			<p id="linux-ram">Machine RAM Usage: </p>
 			<p id="server-ram">Server RAM Usage: </p>
 			<p id="player-count">Player Count: </p>
-			<p id="player-list">Players Online: </p>
-			<p id="active-world">Active World</p>
+			<p id="active-world">Active World: </p>
+			<p id="server-ip">Server IP: </p>
 
 		</div>
 
@@ -144,8 +140,13 @@
 				TERMINAL
 			</p>
 			<br>
-			<div class='terminal-window' id='terminal-window'></div>
-			<input type='text' class='terminal-prompt' id='terminal-prompt'></input>
+			<div class="terminalContainer">
+				<div class='terminal-window' id='terminal-window'></div>
+
+				<div class="prompt-container">
+					<input type='text' class='terminal-prompt' id='terminal-prompt'></input>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

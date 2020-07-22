@@ -251,7 +251,6 @@ function requestHandler(request, response)
 						}
 					}
 
-					console.log(worlds)
 					response.writeHead(200, {"Content-Type": "text/plain"});
 					response.write(worlds.toString());
 					response.end();
@@ -348,10 +347,6 @@ function requestHandler(request, response)
 				response.writeHead(200, {"Content-Type": "text/plain"});
 				response.write("The server is not running");
 				response.end();
-			}
-			else
-			{
-				// server.stdout.pipe(response);
 			}
 		}
 		else
@@ -570,6 +565,7 @@ function playersOnline(response)
 		{
 			let playerCount = players.split(" ");
 			let playersOnline = players.split(": ")[2];
+			playersOnline = playersOnline.split("\n")[0];
 			console.log("Sending player online count");
 
 			if (playerCount[5] == 0)
