@@ -1,0 +1,466 @@
+html body
+{
+	margin: 0;
+	overflow-x: hidden;
+}
+
+.header
+{
+	background-color: black;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	width: 100%;
+	position: fixed;
+	display: flex;
+	top: 0px;
+	z-index: 100;
+}
+
+.title
+{
+	font-weight: 700;
+	font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+	color: rgb(255, 255, 255);
+	font-size: 40pt;
+	width: 100%;
+	position: absolute;
+	text-align: center;
+	align-self: center;
+}
+
+.controls
+{
+	z-index: 1;
+	width: 100%;
+	text-align: right;
+	position: relative; right: 20px;
+}
+
+.buttons
+{
+	float: right;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	width: 230px;
+}
+
+.image
+{
+	width: 50px;
+	height: 50px;
+}
+
+.start, .stop, .restart
+{
+	background: none;
+	border: none;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+
+}
+
+.start
+{
+	margin: auto;
+}
+
+.stop
+{
+	margin: auto;
+}
+
+.restart
+{
+	margin: auto;
+}
+
+.status
+{
+	z-index: 2;
+	position: absolute;
+	float: left;
+	margin-left: 0px;
+	align-self: center;
+	text-align: center;
+	width: 200px;
+}
+
+.statusRefresh
+{
+	color: rgb(180, 16, 16);
+	font-size: 25pt;
+	font-weight: 700;
+	font-family: monospace;
+	background-color: black;
+	border-color: rgb(180, 16, 16);
+}
+
+.menu
+{
+	height: 100%;
+	width: 200px;
+	position: fixed;
+	left: 0;
+	top: 90px;
+	background-color: rgb(34, 34, 34);
+	overflow-x: hidden;
+	z-index: 5;
+}
+
+.menu button
+{
+	font-size: 20pt;
+	display: block;
+	padding: 24px;
+	width: 200px;
+	border: none;
+	font-family: monospace;
+	font-weight: 700;
+	color: white;
+	background-color: rgb(34, 34, 34);
+	transition-duration: 0.3s;
+	position: relative;
+}
+
+.menu button:hover
+{
+	background-color: rgb(42, 133, 42);
+}
+
+.subtitle
+{
+	font-size: 40pt;
+	font-family: monospace;
+	font-weight: bold;
+	width: 78%;
+	position: relative; left: 250px;
+	padding: 0px;
+	margin-top: 30px;
+	margin-bottom: 0px;
+}
+
+.note
+{
+	color: rgba(105, 105, 105, 0.753);
+}
+
+.tab p:not(.subtitle)
+{
+	font-size: 20pt;
+	font-family: monospace;
+	font-weight: 700;
+	width: 100%;
+	position: relative; left: 250px;
+}
+
+.tab
+{
+	position: relative;
+	top: 90px;
+}
+
+.slideshow
+{
+	background-color: black;
+	position: fixed;
+	left: 125px;
+	top: -85px;
+	width: 100%;
+	height: 110%;
+	display: block;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+.slide
+{
+	display: none;
+	width: 100%;
+	height: 100%;
+}
+
+.ram-allocation
+{
+	text-align: center;
+	font-size: 24pt;
+	font-family: monospace;
+	font-weight: 700;
+}
+
+.slidercontainer
+{
+	width: 100%;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	position: relative;
+}
+
+.slider
+{
+	width: 40%;
+	border-radius: 5px;
+	background-color: rgb(167, 167, 167);
+	height: 10px;
+	cursor: pointer;
+	position: relative;
+	z-index: 51;
+}
+
+.slider::-moz-range-thumb
+{
+	border: none;
+	width: 16px;
+	height: 32px;
+	border-radius: 5px;
+	background: rgb(55, 168, 55);
+	outline: none;
+	cursor: pointer;
+	position: relative;
+	z-index: 6;
+}
+
+.save-changes, .edit, .add, .remove, .backup-worlds
+{
+	border: none;
+	font-size: 24pt;
+	font-family: monospace;
+	font-weight: 700;
+	border-radius: 10px;
+	color: white;
+	outline: none;
+	float: right;
+	margin-top: 10px;
+	margin-left: 10px;
+	position: relative;
+	right: 2px;
+}
+
+.edit
+{
+	background-color: rgb(22, 116, 179);
+}
+
+.save-changes
+{
+	background-color: rgb(55, 168, 55);
+}
+
+.save
+{
+	display: none;
+}
+
+.switch, .selectedWorld
+{
+	margin-right: 60px;
+}
+
+.add
+{
+	background-color: rgb(55, 168, 55);
+}
+
+.remove
+{
+	background-color: red;
+}
+
+.changeProperty, .addPlayer
+{
+	background-color: rgb(233, 229, 229);
+	font-size: 16pt;
+	font-family: monospace;
+	font-weight: 700;
+	border-style: solid;
+	border: none;
+	border-radius: 5px;
+	position: relative;
+	bottom: 1px;
+	padding: 5px;
+}
+
+.changeProperty
+{
+	width: 150px;
+}
+
+.addPlayer
+{
+	width: 250px;
+}
+
+.deletePlayer, .deleteWorld
+{
+	border: none;
+	width: 30px;
+	height: 30px;
+	float: right;
+	margin-left: 30px;
+	margin-right: 6.5px;
+	background-color: red;
+	color: white;
+	font-size: 16pt;
+	font-family: monospace;
+	font-weight: 900;
+	border-radius: 10px;
+	position: relative;
+	top: -1px;
+}
+
+.onlineStatus
+{
+	width: 15px;
+	height: 15px;
+	background-color: rgb(212, 212, 212);
+	float: right;
+	position: relative;
+	border-radius: 15px;
+	top: 8px;
+	right: 30px;
+}
+
+.whitelist
+{
+	width: 78%;
+}
+
+.world-list
+{
+	width: 78%;
+}
+
+.world
+{
+	border: none;
+	background: none;
+	font-size: 20pt;
+	font-family: monospace;
+	font-weight: 700;
+	cursor: pointer;
+}
+.world:hover
+{
+	color: rgb(3, 160, 3);
+}
+
+.backup-worlds
+{
+	background-color: rgb(136, 43, 230);
+}
+
+.switch
+{
+	position: relative;
+	width: 50px;
+	height: 30px;
+	float: right;
+	padding-right: 8px;
+	margin-right: 8px;
+}
+
+.switch input
+{
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.switch-slider
+{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+.switch-slider:before
+{
+	position: absolute;
+	content: "";
+	height: 22px;
+	width: 22px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .35s;
+	transition: .35s;
+}
+
+input:checked + .switch-slider
+{
+  	background-color: rgb(16, 196, 10);
+}
+
+input:focus + .switch-slider
+{
+  	box-shadow: 0 0 1px rgb(16, 196, 10);
+}
+
+input:checked + .switch-slider:before
+{
+	-webkit-transform: translateX(28px);
+	-ms-transform: translateX(28px);
+	transform: translateX(28px);
+}
+
+.switch-slider.round
+{
+  	border-radius: 34px;
+}
+
+.switch-slider.round:before
+{
+  	border-radius: 50%;
+}
+
+.addWorld
+{
+	display: none;
+}
+
+.terminalContainer
+{
+	width: 100%;
+}
+
+.prompt-container
+{
+	width: 100%;
+	text-align: center;
+}
+
+.terminal-window
+{
+	height: 500px;
+	width:900px;
+	border:10px solid rgb(0, 0, 0);
+	font:16px Consolas;
+	overflow:auto;
+	background-color: black;
+	color: white;
+	position: relative;
+	margin: auto;
+}
+
+.terminal-prompt
+{
+	background-color: rgb(233, 229, 229);
+	font-size: 16pt;
+	font-family: monospace;
+	font-weight: 700;
+	border-style: solid;
+	border: none;
+	border-radius: 5px;
+	position: relative;
+	bottom: 1px;
+	padding: 5px;
+	top: 10px;
+	width:910px;
+}

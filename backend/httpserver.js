@@ -179,7 +179,7 @@ function requestHandler(request, response)
 
 		if (target == "/mcserver")
 		{
-			fs.readFile("../repo/frontend/structure.html",
+			fs.readFile("../repo/frontend/private/structure.html",
 				function(err, data)
 				{
 					if (err)
@@ -628,7 +628,7 @@ function getFrontendResource(target, response)
 {
 	let ext = path.extname(target);
 	let type = contentTypes[ext];
-	let filePath = "../repo/frontend" + target;
+	let filePath = "../repo/frontend/private" + target;
 
 	fs.readFile(filePath,
 		function(err, data)
