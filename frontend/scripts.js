@@ -2,6 +2,7 @@ const HOSTNAME = "firestorm.local";
 const PORT = "8080";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 const SOCKET_URL = "ws://" + HOSTNAME + ":" + PORT;
+const PICTURE_COUNT = 3;
 var propertiesEditable = true;
 var addingPlayer = false;
 var worlds = {};
@@ -11,11 +12,15 @@ var playerRefresh;
 var terminalSocket = null
 var terminalConnected = false;
 var serverPort;
+var opacity;
+var slideshow;
+var slide = 2;
 
 function switchTab(name)
 {
 	clearInterval(statRefresh);
 	clearInterval(playerRefresh);
+	clearInterval(slideshow);
 	var tabs = document.getElementsByClassName("tab");
 
 	for (var i = 0; i < tabs.length; i++)
@@ -128,6 +133,14 @@ function switchTab(name)
 				getCurrentWorld("worlds");
 			}
 		);
+	}
+	else if (name == "home")
+	{
+		slideshow = setInterval(function()
+		{
+			changeSlide("pic" + slide);
+		}
+		, 8000);
 	}
 
 	document.getElementById(name).style.display = "block";
@@ -606,24 +619,25 @@ function getServerPort()
 
 function changeSlide(id)
 {
-
 	id = id.split("pic")[1];
 	id = parseInt(id, 10);
-	id = ++id % 3;
+
+	let newID = id + 1;
+	newID = ++newID % PICTURE_COUNT;
+	newID = newID.toString();
+
+	id = ++id % PICTURE_COUNT;
+	slide = id;
 	id = id.toString();
 
-	for (let i = 0; i < 3; i++)
-	{
-		document.getElementById("pic" + i).style.display = "none";
-	}
-
-	fade(id);
-
+	fade(id, newID);
 }
 
-function fade(id)
+function fade(id, newID)
 {
-	let opacity = 100;
+	opacity = 100;
+	document.getElementById("pic" + id).style.opacity = opacity + "%";
+
 	let fadeOut = setInterval(function()
 	{
 		opacity--;
@@ -632,19 +646,34 @@ function fade(id)
 
 		if (opacity == 0)
 		{
-			document.getElementById("pic" + id).style.display = "block";
+			document.getElementById("pic" + id).style.display = "none";
 			clearInterval(fadeOut);
+
+			let fadeIn = setInterval(function()
+			{
+				opacity++;
+				document.getElementById("pic" + newID).style.opacity = opacity + "%";
+				document.getElementById("pic" + newID).style.display = "block";
+
+				if (opacity == 100)
+				{
+					clearInterval(fadeIn);
+					return;
+				}
+			}
+			, 10)
 		}
-	}, 10);
+	}
+	, 10);
 }
 
 function init()
 {
-	changeSlide("pic2");
+	switchTab("home");
+	document.getElementById("pic0").style.display = "block"
 	getStats();
 	getStatus();
 	setInterval(getStatus, 30000);
-	switchTab("home");
 	getRAM();
 	openTerminalSocket();
 	getServerPort();
