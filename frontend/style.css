@@ -221,7 +221,7 @@ html body
 	z-index: 6;
 }
 
-.save-changes, .edit, .add, .remove
+.save-changes, .edit, .add, .remove, .backup-worlds
 {
 	border: none;
 	font-size: 24pt;
@@ -343,6 +343,11 @@ html body
 .world:hover
 {
 	color: rgb(3, 160, 3);
+}
+
+.backup-worlds
+{
+	background-color: rgb(136, 43, 230);
 }
 
 .switch

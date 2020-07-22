@@ -152,6 +152,24 @@ function requestHandler(request, response)
 						}
 					);
 				}
+				else if (target == "/backupWorlds")
+				{
+					let backup = spawn('../repo/tools/backup-worlds.sh');
+
+					backup.stdout.on('data',
+						function(data)
+						{
+							console.log(data.toString())
+						}
+					);
+
+					backup.on('close',
+						function(code)
+						{
+							console.log("Worlds backed up")
+						}
+					);
+				}
 			}
 		);
 	}

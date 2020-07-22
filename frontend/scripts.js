@@ -617,6 +617,11 @@ function getServerPort()
 	);
 }
 
+function backup()
+{
+	sendData("backupWorlds")
+}
+
 function changeSlide(id)
 {
 	id = id.split("pic")[1];
