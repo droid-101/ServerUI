@@ -31,7 +31,6 @@
 
 <div class='menu'>
 	<button onclick='switchTab("home")'>Home</button>
-	<button onclick='switchTab("dashboard")'>Dashboard</button>
 	<button onclick='switchTab("players")'>Players</button>
 	<button onclick='switchTab("worlds")'>Worlds</button>
 </div>
@@ -60,32 +59,6 @@
 				<img class="slide" id="pic15" src="pictures/bricktrooper.png"><img/>
 				<img class="slide" id="pic16" src="pictures/TheUnderworld.png"><img/>
 			</div>
-		</div>
-
-		<div class='tab' id='dashboard'>
-			<p class="subtitle">
-				DASHBOARD
-
-				<span>
-					<button class="save-changes" onclick="sendRAM()">SAVE</button>
-				</span>
-			</p>
-			<div>
-				<p class="note">Note: The server must be restarted for changes to take place.</p>
-			</div>
-
-			<br/>
-			<div id="allocated-ram" class="ram-allocation">Allocated RAM: </div>
-			<div class="slidercontainer">
-				<input type="range" min="1024" max="6144" value="" class="slider" id="slider" step="1" oninput="setValue(value)">
-			</div>
-			<p id="cpu-usage">CPU Usage: </p>
-			<p id="linux-ram">Machine RAM Usage: </p>
-			<p id="server-ram">Server RAM Usage: </p>
-			<p id="player-count">Player Count: </p>
-			<p id="active-world">Active World: </p>
-			<p id="server-ip">Server IP: </p>
-
 		</div>
 
 		<div class='tab' id='players'>

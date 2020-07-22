@@ -25,17 +25,7 @@ function switchTab(name)
 		tabs[i].style.display = "none";
 	}
 
-	if (name == "dashboard")
-	{
-		getStats();
-
-		statRefresh = setInterval(function()
-		{
-			getStats();
-		}
-		, 10000);
-	}
-	else if (name == "players")
+	if (name == "players")
 	{
 		playerList = {};
 		playerRefresh = setInterval(function()
@@ -370,14 +360,7 @@ function getCurrentWorld(tab)
 				return;
 			}
 
-			if (tab == "dashboard")
-			{
-				document.getElementById("active-world").innerHTML = "Active World: " + target;
-			}
-			else
-			{
-				document.getElementById("setWorld*" + target).style.color = "rgb(8, 179, 8)";
-			}
+			document.getElementById("setWorld*" + target).style.color = "rgb(8, 179, 8)";
 		}
 	);
 }
@@ -427,10 +410,6 @@ function getPlayers(tab)
 					document.getElementById("online-" + target[i]).style.backgroundColor = "rgb(40, 224, 23)";
 				}
 			}
-			else if (tab == "dashboard")
-			{
-				document.getElementById("player-count").innerHTML = "Player Count: " + target.split("*")[0];
-			}
 		}
 	);
 }
@@ -456,14 +435,6 @@ function getSystemStats()
 			document.getElementById("server-ip").innerHTML = "Server IP: " + data[2].trim() + ":" + serverPort;
 		}
 	);
-}
-
-function getStats()
-{
-	getSystemStats();
-	getRAMusage();
-	getPlayers("dashboard");
-	getCurrentWorld("dashboard");
 }
 
 function getServerPort()
@@ -536,7 +507,6 @@ function init()
 {
 	switchTab("home");
 	document.getElementById("pic0").style.display = "block"
-	getStats();
 	getStatus();
 	setInterval(getStatus, 30000);
 	getRAM();
