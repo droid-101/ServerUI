@@ -25,25 +25,7 @@ function switchTab(name)
 		tabs[i].style.display = "none";
 	}
 
-	if (name == "settings")
-	{
-		requestData("properties",
-			function(target)
-			{
-				document.getElementById("properties").innerHTML = "";
-				let properties = JSON.parse(target);
-				for (key in properties)
-				{
-					let line = "<p>";
-					line = line.concat(key, " = ", properties[key]);
-					line += "</p>";
-
-					document.getElementById("properties").innerHTML += line;
-				}
-			}
-		);
-	}
-	else if (name == "dashboard")
+	if (name == "dashboard")
 	{
 		getStats();
 
@@ -245,76 +227,6 @@ function getRAM()
 		{
 			document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + target  + "MB (" + target[0] + "GB)";
 			document.getElementById("slider").value = target;
-		}
-	);
-}
-
-function editProperties()
-{
-	document.getElementById("properties").innerHTML = "";
-	requestData("properties",
-		function(target)
-		{
-			let properties = JSON.parse(target);
-
-			if (propertiesEditable)
-			{
-				propertiesEditable = false;
-				document.getElementById("editProperties").innerHTML = "CANCEL";
-				document.getElementById("editProperties").style.backgroundColor = "red";
-				document.getElementById("save").innerHTML = "<button class='save-changes' onclick='saveProperties()'>SAVE</button>";
-
-				for (key in properties)
-				{
-					let boxID = "edit-" + key;
-					let line = "<p>";
-					line = line.concat(key, " = ");
-					line += "<input class='changeProperty' id=" + boxID + " type='text' value='" + properties[key] + "'></input>";
-					line += "</p>";
-
-					document.getElementById("properties").innerHTML += line;
-				}
-			}
-			else
-			{
-				propertiesEditable = true;
-				document.getElementById("editProperties").innerHTML = "EDIT";
-				document.getElementById("editProperties").style.backgroundColor = "rgb(22, 116, 179)";
-				document.getElementById("save").innerHTML = "";
-
-				for (key in properties)
-				{
-					let line = "<p>";
-					line = line.concat(key, " = ", properties[key]);
-					line += "</p>";
-
-					document.getElementById("properties").innerHTML += line;
-				}
-			}
-		}
-	);
-}
-
-function saveProperties()
-{
-	requestData("properties",
-		function(target)
-		{
-			let properties = JSON.parse(target);
-
-			for (key in properties)
-			{
-				let boxID = "edit-" + key;
-				properties[key] = document.getElementById(boxID).value;
-			}
-
-			console.log("properties: " + JSON.stringify([properties]))
-			console.log(properties);
-
-			sendData("properties", JSON.stringify(properties));
-			propertiesEditable = false;
-
-			setTimeout(function() {editProperties();}, 1000);
 		}
 	);
 }
