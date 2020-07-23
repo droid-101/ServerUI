@@ -1,0 +1,13 @@
+[Unit]
+Description=Headless Minecraft Server
+After=network.target network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/owner/mcserver/repo/backend
+ExecStart=/usr/local/bin/node httpserver.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
