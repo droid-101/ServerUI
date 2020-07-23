@@ -1,4 +1,4 @@
-const HOSTNAME = "firestorm.local";
+const HOSTNAME = document.location.hostname;
 const PORT = "80";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 const PICTURE_COUNT = 17;

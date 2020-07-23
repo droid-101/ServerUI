@@ -1,4 +1,4 @@
-const HOSTNAME = "firestorm.local";
+const HOSTNAME = document.location.hostname;
 const PORT = "8080";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 const SOCKET_URL = "ws://" + HOSTNAME + ":" + PORT;
