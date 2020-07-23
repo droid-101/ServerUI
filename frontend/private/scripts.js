@@ -2,7 +2,7 @@ const HOSTNAME = document.location.hostname;
 const PORT = "8080";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 const SOCKET_URL = "ws://" + HOSTNAME + ":" + PORT;
-const PICTURE_COUNT = 17;
+const PICTURE_COUNT = 14;
 var propertiesEditable = true;
 var addingPlayer = false;
 var worlds = {};
@@ -14,7 +14,7 @@ var terminalConnected = false;
 var serverPort;
 var opacity;
 var slideshow;
-var slide = 16;
+var slide = 13;
 
 function switchTab(name)
 {

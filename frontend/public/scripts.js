@@ -1,13 +1,13 @@
 const HOSTNAME = document.location.hostname;
 const PORT = "80";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
-const PICTURE_COUNT = 17;
+const PICTURE_COUNT = 14;
 var worlds = {};
 var playerList = {};
 var playerRefresh;
 var opacity;
 var slideshow;
-var slide = 16;
+var slide = 13;
 
 function switchTab(name)
 {
