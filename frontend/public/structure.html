@@ -64,23 +64,13 @@
 		<div class='tab' id='players'>
 			<p class="subtitle">
 				PLAYERS
-
-				<span>
-					<button class="add" id="addPlayer" title="Add Player" onclick="toggleAdd()">+</button>
-				</span>
-				<span>
-					<button class="save-changes" id="savePlayers" onclick="addPlayer()">SAVE</button>
-				</span>
 			</p>
 			<div>
-				<p class="note">Note: The server must be running to edit player data.</p>
 			</div>
 			<div id="whitelist" class="whitelist">
 			</div>
-			<p><input class='addPlayer' id='newPlayer' type='text'></input></p>
 
 			<br>
-
 		</div>
 
 		<div class='tab' id='worlds'>
@@ -92,10 +82,6 @@
 				</span>
 				<span>
 					<input type="file" title="Add World" class="addWorld" id="addWorld" accept="application/x-zip-compressed" oninput="addWorld(files)">
-				</span>
-
-				<span>
-					<button class="backup-worlds" onclick="backup()">BACKUP</button>
 				</span>
 			</p>
 			<div>

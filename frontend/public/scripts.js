@@ -1,21 +1,16 @@
 const HOSTNAME = "firestorm.local";
-const PORT = "8080";
+const PORT = "80";
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 const PICTURE_COUNT = 17;
-var propertiesEditable = true;
-var addingPlayer = false;
 var worlds = {};
 var playerList = {};
-var statRefresh;
 var playerRefresh;
-var serverPort;
 var opacity;
 var slideshow;
 var slide = 16;
 
 function switchTab(name)
 {
-	clearInterval(statRefresh);
 	clearInterval(playerRefresh);
 	clearInterval(slideshow);
 	var tabs = document.getElementsByClassName("tab");
@@ -43,8 +38,6 @@ function switchTab(name)
 				{
 					let line = "<p>";
 					line += whitelist[player]["name"];
-					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
-					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
 					line += "<span class='onlineStatus' id='online-" + whitelist[player]["name"] + "'></span>"
 					line += "</p>";
 
@@ -53,26 +46,8 @@ function switchTab(name)
 				}
 
 				getPlayers("players");
-
-				document.getElementById("newPlayer").style.display = "none";
-				document.getElementById("savePlayers").style.display = "none";
 			}
 		);
-
-		setTimeout(function()
-		{
-			requestData("ops",
-				function(target)
-				{
-					let ops = JSON.parse(target);
-					for (player in ops)
-					{
-						document.getElementById("op-" + ops[player]["name"]).checked = true;
-					}
-				}
-			);
-		}
-		, 500);
 	}
 	else if (name == "worlds")
 	{
@@ -92,7 +67,6 @@ function switchTab(name)
 				{
 					let line = "<p>";
 					line += "<button class='world' id='setWorld*" + target[i] + "' onclick='selectWorld(\"" + target[i] + "\")'>" + target[i] + "</button>";
-					line += "<button class='deleteWorld' id='delete*" + target[i] + "' onclick='deleteWorld(this.id)'>-</button>";
 					line += "</p>";
 					document.getElementById("world-list").innerHTML += line;
 
@@ -197,153 +171,6 @@ function getStatus()
 	);
 }
 
-function setValue(value)
-{
-	value = Math.trunc(value / 1024) * 1024;
-	document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + value + "MB (" + Math.trunc(value / 1024) + "GB)";
-}
-
-function sendRAM()
-{
-	let value = document.getElementById("slider").value;
-	value = Math.trunc(value / 1024) * 1024;
-	sendData("ram", value.toString());
-}
-
-function getRAM()
-{
-	requestData("ram",
-		function(target)
-		{
-			document.getElementById("allocated-ram").innerHTML = "Allocated RAM: " + target  + "MB (" + target[0] + "GB)";
-			document.getElementById("slider").value = target;
-		}
-	);
-}
-
-function toggleAdd()
-{
-	if (!addingPlayer)
-	{
-		document.getElementById("newPlayer").style.display = "block";
-		document.getElementById("newPlayer").value = "";
-		addingPlayer = true;
-		document.getElementById("addPlayer").style.backgroundColor = "red";
-		document.getElementById("addPlayer").innerHTML = "CANCEL";
-		document.getElementById("savePlayers").style.display = "inline";
-	}
-	else
-	{
-		addingPlayer = false;
-		document.getElementById("addPlayer").style.backgroundColor = "rgb(55, 168, 55)";
-		document.getElementById("addPlayer").innerHTML = "+";
-		document.getElementById("newPlayer").style.display = "none";
-		document.getElementById("savePlayers").style.display = "none";
-	}
-}
-
-function addPlayer()
-{
-	playerList = {};
-	let player = document.getElementById("newPlayer").value;
-	sendData("addPlayer", player);
-
-	addingPlayer = true;
-	setTimeout(function()
-	{
-		requestData("whitelist",
-			function(target)
-			{
-				document.getElementById("whitelist").innerHTML = "";
-				let whitelist = JSON.parse(target);
-				for (player in whitelist)
-				{
-					let line = "<p>";
-					line += whitelist[player]["name"];
-					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
-					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
-					line += "<span class='onlineStatus' id='online-" + whitelist[player]["name"] + "'></span>";
-					line += "</p>";
-
-					document.getElementById("whitelist").innerHTML += line;
-					playerList[player] = whitelist[player]["name"];
-				}
-
-				toggleAdd();
-				getPlayers("players");
-			}
-		);
-
-		requestData("ops",
-			function(target)
-			{
-				let ops = JSON.parse(target);
-				for (player in ops)
-				{
-					document.getElementById("op-" + ops[player]["name"]).checked = true;
-				}
-			}
-		);
-	} , 500);
-}
-
-function removePlayer(id)
-{
-	playerList = {};
-	let player = id.split("-")[1];
-	sendData("removePlayer", player);
-
-	setTimeout(function()
-	{
-		requestData("whitelist",
-			function(target)
-			{
-				document.getElementById("whitelist").innerHTML = "";
-				let whitelist = JSON.parse(target);
-				for (player in whitelist)
-				{
-					let line = "<p>";
-					line += whitelist[player]["name"];
-					line += "<button class='deletePlayer' id='delete-" + whitelist[player]["name"] + "' onclick='removePlayer(this.id)'>-</button>";
-					line += "<label class='switch'><input type='checkbox' id='op-" + whitelist[player]["name"] + "' oninput='editOps(this.id)'><span class='switch-slider round'></span></label>";
-					line += "<span class='onlineStatus' id='online-" + whitelist[player]["name"] + "'></span>";
-					line += "</p>";
-
-					document.getElementById("whitelist").innerHTML += line;
-					playerList[player] = whitelist[player]["name"];
-				}
-
-				getPlayers("players");
-			}
-		);
-
-		requestData("ops",
-			function(target)
-			{
-				let ops = JSON.parse(target);
-				for (player in ops)
-				{
-					document.getElementById("op-" + ops[player]["name"]).checked = true;
-				}
-			}
-		);
-	} , 500);
-}
-
-function editOps(id)
-{
-	let player = id.split("-")[1];
-
-	if (document.getElementById(id).checked)
-	{
-		sendData("op", player);
-	}
-	else
-	{
-		sendData("deop", player);
-	}
-}
-
 function selectWorld(world)
 {
 	sendData("setWorld", world);
@@ -377,13 +204,6 @@ function addWorld(file)
 	setTimeout(switchTab, 2500, "worlds")
 }
 
-function deleteWorld(id)
-{
-	world = id.split("*")[1]
-	sendData("deleteWorld", world);
-	setTimeout(switchTab, 2500, "worlds")
-}
-
 function getPlayers(tab)
 {
 	requestData("playersOnline",
@@ -412,45 +232,6 @@ function getPlayers(tab)
 			}
 		}
 	);
-}
-
-function getRAMusage()
-{
-	requestData("serverRAM",
-		function(target)
-		{
-			document.getElementById("server-ram").innerHTML = "Server RAM Usage: " + target;
-		}
-	);
-}
-
-function getSystemStats()
-{
-	requestData("systemStats",
-		function(target)
-		{
-			let data = target.split(" ");
-			document.getElementById("cpu-usage").innerHTML = "CPU Usage: " + data[0];
-			document.getElementById("linux-ram").innerHTML = "Machine RAM Usage: " + data[1];
-			document.getElementById("server-ip").innerHTML = "Server IP: " + data[2].trim() + ":" + serverPort;
-		}
-	);
-}
-
-function getServerPort()
-{
-	requestData("properties",
-		function(target)
-		{
-			let properties = JSON.parse(target);
-			serverPort = properties["server-port"];
-		}
-	);
-}
-
-function backup()
-{
-	sendData("backupWorlds")
 }
 
 function changeSlide(id)
@@ -506,9 +287,7 @@ function fade(id, newID)
 function init()
 {
 	switchTab("home");
-	document.getElementById("pic0").style.display = "block"
+	document.getElementById("pic0").style.display = "block";
 	getStatus();
 	setInterval(getStatus, 30000);
-	getRAM();
-	getServerPort();
 }

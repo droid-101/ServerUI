@@ -5,7 +5,8 @@ var pidusage = require('pidusage');
 var spawn = require('child_process').spawn;
 var WebSocket = require('ws');
 
-const PORT = 8080;
+const PRIVATE_PORT = 8080;
+const PUBLIC_PORT = 80;
 
 var server = null;
 var error = false;
@@ -23,16 +24,29 @@ var contentTypes = {
 
 process.chdir("../../server");
 
-var website = http.createServer(requestHandler);
+var privateWebsite = http.createServer(requestHandler);
 openSocketServer();
-website.listen(PORT);
+privateWebsite.listen(PRIVATE_PORT);
+
+var publicWebsite = http.createServer(requestHandler)
+publicWebsite.listen(PUBLIC_PORT);
 
 function requestHandler(request, response)
 {
 	let target = request.url;
 	let body = [];
+	let serverType = "";
 
-	console.log(request.method, target);
+	if (this === privateWebsite)
+	{
+		serverType = "private";
+	}
+	else if (this === publicWebsite)
+	{
+		serverType = "public";
+	}
+
+	console.log(serverType, request.method, target);
 
 	if (request.method == "POST")
 	{
@@ -121,7 +135,7 @@ function requestHandler(request, response)
 							addWorld.stdout.on('data',
 								function(data)
 								{
-									console.log(data);
+									console.log(data.toString());
 								}
 							);
 
@@ -141,7 +155,7 @@ function requestHandler(request, response)
 					deleteWorld.stdout.on('data',
 						function(data)
 						{
-							console.log(data);
+							console.log(data.toString());
 						}
 					);
 
@@ -179,7 +193,7 @@ function requestHandler(request, response)
 
 		if (target == "/mcserver")
 		{
-			fs.readFile("../repo/frontend/private/structure.html",
+			fs.readFile("../repo/frontend/" + serverType + "/structure.html",
 				function(err, data)
 				{
 					if (err)
@@ -369,7 +383,7 @@ function requestHandler(request, response)
 		}
 		else
 		{
-			getFrontendResource(target, response);
+			getFrontendResource(target, response, serverType);
 		}
 	}
 }
@@ -624,11 +638,11 @@ function serverRAM(response)
 	}
 }
 
-function getFrontendResource(target, response)
+function getFrontendResource(target, response, serverType)
 {
 	let ext = path.extname(target);
 	let type = contentTypes[ext];
-	let filePath = "../repo/frontend/private" + target;
+	let filePath = "../repo/frontend/"+ serverType + target;
 
 	fs.readFile(filePath,
 		function(err, data)
@@ -650,7 +664,7 @@ function getFrontendResource(target, response)
 
 function openSocketServer()
 {
-	socketServer = new WebSocket.Server({ server: website })
+	socketServer = new WebSocket.Server({ server: privateWebsite })
 
 	socketServer.on('connection',
 		function(socket)
