@@ -11,7 +11,6 @@ const PUBLIC_PORT = 80;
 var server = null;
 var error = false;
 var commandOutput = null;
-var done = false;
 var socketServer = null;
 var terminalSocket = null;
 var streamTerminal= false;
@@ -390,12 +389,12 @@ function requestHandler(request, response)
 
 function serverRunning()
 {
-	if (server == null || !done)
+	if (server == null)
 	{
 		return false;
 	}
 
-	if (server.exitCode == null && done)
+	if (server.exitCode == null)
 	{
 		return true;
 	}
@@ -432,10 +431,6 @@ function startServer()
 				commandOutput = (`${data}`);
 				console.log(commandOutput);
 				sendTerminalOutput(commandOutput);
-				if (!done)
-				{
-					checkForDone(commandOutput);
-				}
 			});
 
 
@@ -472,7 +467,6 @@ function stopServer()
 	console.log("Stopping Minecraft server");
 	serverCommand("/stop");
 	server = null;
-	done = false;
 }
 
 function restartServer()
@@ -562,14 +556,6 @@ function currentWorld(response)
 			response.end();
 		}
 	);
-}
-
-function checkForDone(output)
-{
-	if (output.match(/\[Server thread\/INFO\]: Done/gi) != null)
-	{
-		done = true;
-	}
 }
 
 function playersOnline(response)
