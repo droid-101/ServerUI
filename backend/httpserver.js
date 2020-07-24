@@ -6,7 +6,7 @@ var spawn = require('child_process').spawn;
 var WebSocket = require('ws');
 
 const PRIVATE_PORT = 8080;
-const PUBLIC_PORT = 80;
+const PUBLIC_PORT = 8000;
 
 var server = null;
 var error = false;
