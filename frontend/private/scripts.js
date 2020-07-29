@@ -1,5 +1,5 @@
 const HOSTNAME = document.location.hostname;
-const PORT = "8080";
+const PORT = document.location.port;
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 const SOCKET_URL = "ws://" + HOSTNAME + ":" + PORT;
 const PICTURE_COUNT = 14;
@@ -670,6 +670,11 @@ function fade(id, newID)
 		}
 	}
 	, 10);
+}
+
+function shutdown()
+{
+	sendData("shutdown");
 }
 
 function init()

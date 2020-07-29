@@ -3,6 +3,7 @@ var fs = require("fs");
 var path = require('path');
 var pidusage = require('pidusage');
 var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 var WebSocket = require('ws');
 
 const PRIVATE_PORT = 8080;
@@ -182,6 +183,20 @@ function requestHandler(request, response)
 							console.log("Worlds backed up")
 						}
 					);
+				}
+				else if (target == "/shutdown")
+				{
+					if (serverRunning())
+					{
+						console.log("Cannot shutdown: Server still running");
+						return;
+					}
+
+					privateWebsite.close();
+					publicWebsite.close();
+
+					console.log("Shutting down Firestorm");
+					exec('sudo shutdown', function(error, stdout, stderr){ console.log(stdout); });
 				}
 			}
 		);
@@ -465,9 +480,11 @@ function stopServer()
 	}
 
 	console.log("Stopping Minecraft server");
-	serverCommand("/stop");
+
+	serverCommand("/stop")
 	server = null;
 }
+
 
 function restartServer()
 {

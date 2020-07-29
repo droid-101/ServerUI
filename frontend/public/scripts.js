@@ -1,5 +1,5 @@
 const HOSTNAME = document.location.hostname;
-const PORT = "80";
+const PORT = document.location.port;
 const SERVER_URL = "http://" + HOSTNAME + ":" + PORT;
 const PICTURE_COUNT = 14;
 var worlds = {};
