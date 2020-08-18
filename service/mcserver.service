@@ -6,7 +6,7 @@ After=network.target network-online.target
 Type=simple
 User=owner
 WorkingDirectory=/home/owner/mcserver/repo/backend
-ExecStart=/usr/local/bin/node httpserver.js
+ExecStart=/usr/bin/node httpserver.js
 Restart=on-failure
 
 [Install]
