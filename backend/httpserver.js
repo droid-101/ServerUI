@@ -608,7 +608,7 @@ function playersOnline(response)
 				playersOnline = "None";
 			}
 
-			playerCount = playerCount[5] + " / " + playerCount[9];
+			playerCount = playerCount[5] + " / " + playerCount[10];
 			response.write(playerCount + "*" + playersOnline);
 		}
 
