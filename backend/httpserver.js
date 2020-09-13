@@ -15,6 +15,7 @@ var commandOutput = null;
 var socketServer = null;
 var terminalSocket = null;
 var streamTerminal= false;
+var backingUp = false;
 
 var contentTypes = {
 	".css": "text/css",
@@ -168,7 +169,14 @@ function requestHandler(request, response)
 				}
 				else if (target == "/backupWorlds")
 				{
+					if (backingUp)
+					{
+						console.log("A backup is already in progress");
+						return;
+					}
+
 					let backup = spawn('../repo/tools/backup-worlds.sh');
+					backingUp = true;
 
 					backup.stdout.on('data',
 						function(data)
@@ -180,6 +188,7 @@ function requestHandler(request, response)
 					backup.on('close',
 						function(code)
 						{
+							backingUp = false;
 							console.log("Worlds backed up")
 						}
 					);
