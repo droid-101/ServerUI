@@ -9,15 +9,14 @@ rm -rv *
 
 for SRC in ../worlds/*
 do
-    cp -Rv "$SRC" .
     WORLD=`basename "$SRC"`
     echo "Backing up" $WORLD
-    zip -r "${WORLD}.latest.zip" "$WORLD"
+    zip -r "${WORLD}.latest.zip" "$SRC"
 
     cp -v "${WORLD}.latest.zip" ../backups/
     rm -rvf ../backups/"${WORLD}.zip"
     mv -v ../backups/"${WORLD}.latest.zip" ../backups/"${WORLD}.zip"
-    echo "Copied ${WORLD} to SSD"
+    echo "Saved ${WORLD} to SSD"
 
     if cat /proc/mounts | grep /dev/mmcblk0p1 > /dev/null
     then
@@ -27,7 +26,7 @@ do
         cp -v "${WORLD}.latest.zip" "$SD_BACKUP"
         rm -rvf "${SD_BACKUP}/${WORLD}.zip"
         mv -v "${SD_BACKUP}/${WORLD}.latest.zip" "${SD_BACKUP}/${WORLD}.zip"
-        echo "Copied "${WORLD}" to SD Card"
+        echo "Saved "${WORLD}" to SD Card"
     else
         echo "SD Card is not mounted"
         echo "Backup to SD Card will not occur"

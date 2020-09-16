@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "=============== ADDING WORLD ==============="
+
 cd ../temp
 
 if ! test -f "world.zip"
@@ -25,3 +27,5 @@ fi
 
 echo "Adding world ${WORLD_NAME}"
 mv "$WORLD_NAME" "../worlds/${WORLD_NAME}"
+
+echo "=============== ADDING COMPLETE ==============="

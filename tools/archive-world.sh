@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "=============== BEGINNING ARCHIVING ================"
+
+
 if [[ $# -ne 1 ]]
 then
     echo "Please specify the name of the world"
@@ -16,12 +19,8 @@ then
     exit 1
 fi
 
-while test -d "../archive/${WORLD}"
-do
-    echo "World name will be edited in order to archived"
-    i=$((i+1))
-    WORLD="${1} (${i})"
-    echo $WORLD
-done
+zip -r "${WORLD}.deleted.zip" "$WORLD"
+rm -rv "$WORLD"
+mv "${WORLD}.deleted.zip" ../archive/
 
-mv "$1" ../archive/"$WORLD"
+echo "=============== FINISHED ARCHIVING ================"

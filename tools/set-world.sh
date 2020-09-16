@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "=============== SETTING WORLD ================"
+
 if [[ $# -lt 1 ]]
 then
     echo "Please specify a world name"
@@ -25,3 +27,5 @@ else
     echo "${WORLD} does not exist"
     exit 1
 fi
+
+echo "=============== WORLD HAS BEEN SET ================"

@@ -123,6 +123,12 @@ function requestHandler(request, response)
 				}
 				else if (target == "/addWorld")
 				{
+					if (serverRunning())
+					{
+						console.log("Cannot add world: Server is running");
+						return;
+					}
+
 					fs.writeFile("../temp/world.zip", body,
 						function(err)
 						{
@@ -151,6 +157,12 @@ function requestHandler(request, response)
 				}
 				else if (target == "/deleteWorld")
 				{
+					if (serverRunning())
+					{
+						console.log("Cannot delete world: Server is running");
+						return;
+					}
+
 					let deleteWorld = spawn('../repo/tools/archive-world.sh', [body]);
 
 					deleteWorld.stdout.on('data',
@@ -169,6 +181,12 @@ function requestHandler(request, response)
 				}
 				else if (target == "/backupWorlds")
 				{
+					if (serverRunning())
+					{
+						console.log("Cannot backup worlds: Server is running");
+						return;
+					}
+
 					if (backingUp)
 					{
 						console.log("A backup is already in progress");

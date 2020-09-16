@@ -18,7 +18,7 @@ cpu_stats()
 
 ram_stats()
 {
-    local RAM=`free -h | grep Mem`
+    local RAM=`free -h --si | grep Mem`
 
     i=0
     for value in $RAM
