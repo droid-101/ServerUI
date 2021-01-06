@@ -24,6 +24,21 @@ var contentTypes = {
 	".png": "image/png"
 };
 
+const PRIVATE_REQUESTS = [
+	"/ram",
+	"/properties",
+	"/addPlayer",
+	"/removePlayer",
+	"/op",
+	"/deop",
+	"/deleteWorld",
+	"/backupWorlds",
+	"/shutdown",
+	"/ops",
+	"/systemStats",
+	"/serverRAM"
+]
+
 process.chdir("../../server");
 
 var privateWebsite = http.createServer(requestHandler);
@@ -32,6 +47,19 @@ privateWebsite.listen(PRIVATE_PORT);
 
 var publicWebsite = http.createServer(requestHandler)
 publicWebsite.listen(PUBLIC_PORT);
+
+function isPrivateRequest(target)
+{
+	for (let i = 0; i < PRIVATE_REQUESTS.length; i++)
+	{
+		if (target == PRIVATE_REQUESTS[i])
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 
 function requestHandler(request, response)
 {
@@ -52,6 +80,11 @@ function requestHandler(request, response)
 
 	if (request.method == "POST")
 	{
+		if (serverType == "public" && isPrivateRequest(target))
+		{
+			return;   // deny any unauthorized requests
+		}
+
 		request.on('data', (chunk) => {body.push(chunk)});
 		request.on('end',
 			function()
@@ -240,6 +273,12 @@ function requestHandler(request, response)
 	else if (request.method == "GET")
 	{
 		response.setHeader("Access-Control-Allow-Origin", "*");
+
+		if (serverType == "public" && isPrivateRequest(target))
+		{
+			IWillFindYou(response, serverType);   // deny any unauthorized requests
+			return;
+		}
 
 		if (target == "/mcserver")
 		{
@@ -623,7 +662,7 @@ function playersOnline(response)
 	{
 		let output = commandOutput;
 
-		if (output.match(/players online:/gi) == null)
+		if (output == null || output.match(/players online:/gi) == null)
 		{
 			response.write(JSON.stringify(report, null, '\t'));
 			console.log("Failed to get player online count")
