@@ -325,7 +325,7 @@ function requestHandler(request, response)
 					}
 
 					response.writeHead(200, {"Content-Type": "text/plain"});
-					response.write(worlds.toString());
+					response.write(JSON.stringify(worlds, null, '\t'));
 					response.end();
 				}
 			);
@@ -353,27 +353,24 @@ function requestHandler(request, response)
 		else if (target == "/playersOnline")
 		{
 			response.writeHead(200, {"Content-Type": "text/plain"});
-
-			if (serverRunning())
-			{
-				playersOnline(response);
-			}
-			else
-			{
-				response.write("Server Offline*" + "Server Offline");
-				response.end();
-				console.log("Cannot get player count: Server is offline")
-			}
+			playersOnline(response);
 		}
 		else if (target == "/systemStats")
 		{
 			let stats = spawn('../repo/tools/system-stats.sh');
-			let usage = "";
+			let report = {
+				'cpu': -1,
+				'ram': -1,
+				'ip': -1
+			};
 
 			stats.stdout.on('data',
 				function(data)
 				{
-					usage = data.toString();
+					data = data.toString().split(' ');
+					report['cpu'] = data[0];
+					report['ram'] = data[1];
+					report['ip'] = data[2].trim();
 				}
 			);
 
@@ -381,7 +378,7 @@ function requestHandler(request, response)
 				function(code)
 				{
 					response.writeHead(200, {"Content-Type": "text/plain"});
-					response.write(usage);
+					response.write(JSON.stringify(report, null, '\t'));
 					response.end();
 				}
 			);
@@ -412,15 +409,6 @@ function requestHandler(request, response)
 			response.writeHead(200, {"Content-Type": "text/plain"});
 			response.write(currentStatus);
 			response.end();
-		}
-		else if (target == "/terminal")
-		{
-			if (!serverRunning())
-			{
-				response.writeHead(200, {"Content-Type": "text/plain"});
-				response.write("The server is not running");
-				response.end();
-			}
 		}
 		else
 		{
@@ -542,7 +530,7 @@ function propertiesToJSON(properties)
 		jsonData[key] = value;
 	}
 
-	jsonData = JSON.stringify(jsonData);
+	jsonData = JSON.stringify(jsonData, null, '\t');
 	return jsonData;
 }
 
@@ -579,10 +567,10 @@ function setWorld(name)
 
 function currentWorld(response)
 {
-	let currentWorld = spawn('ls', ['-l', "world"]);
+	let current = spawn('ls', ['-l', "world"]);
 	let world = "";
 
-	currentWorld.stdout.on('data',
+	current.stdout.on('data',
 		function(data)
 		{
 			data = data.toString();
@@ -592,7 +580,7 @@ function currentWorld(response)
 		}
 	);
 
-	currentWorld.on('close',
+	current.on('close',
 		function(code)
 		{
 			response.writeHead(200, {"Content-Type": "text/plain"});
@@ -604,39 +592,57 @@ function currentWorld(response)
 
 function playersOnline(response)
 {
+	report = {
+		'online': -1,
+		'max': -1,
+		'status': "OFFLINE",
+		'players': "UNKNOWN",
+	}
+
 	if (!serverRunning())
 	{
-		response.write("Server Offline*" + "Server Offline");
-		response.end();
 		console.log("Cannot get player count: Server is offline")
+		response.write(JSON.stringify(report, null, '\t'));
+		response.end();
 		return;
 	}
 
-
+	let status = "ONLINE"
 	serverCommand("/list");
 
 	setTimeout(function()
 	{
-		let players = commandOutput;
-		if (players.match(/players online:/gi) == null)
+		let output = commandOutput;
+
+		if (output.match(/players online:/gi) == null)
 		{
-			response.write("Unknown*Unknown");
-			console.log("Could not get player online count")
+			response.write(JSON.stringify(report, null, '\t'));
+			console.log("Failed to get player online count")
 		}
 		else
 		{
-			let playerCount = players.split(" ");
-			let playersOnline = players.split(": ")[2];
-			playersOnline = playersOnline.split("\n")[0];
-			console.log("Sending player online count");
+			let online = parseInt(output.split(" ")[5]);
+			let max = parseInt(output.split(" ")[10]);
+			let players = "";
 
-			if (playerCount[5] == 0)
+			if (online == 0)
 			{
-				playersOnline = "None";
+				players = "None";
+			}
+			else
+			{
+				players = output.split(": ")[2];
+				players = players.split("\n")[0];
+				players = players.split(", ");
 			}
 
-			playerCount = playerCount[5] + " / " + playerCount[10];
-			response.write(playerCount + "*" + playersOnline);
+			report['online'] = online;
+			report['max'] = max;
+			report['players'] = players;
+			report['status'] = status;
+
+			console.log("Sending player online count");
+			response.write(JSON.stringify(report, null, '\t'));
 		}
 
 		response.end()

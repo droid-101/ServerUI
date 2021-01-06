@@ -117,7 +117,7 @@ function switchTab(name)
 					return;
 				}
 
-				target = target.split(",");
+				target = JSON.parse(target);
 
 				for (let i = 0; i < target.length; i++)
 				{
@@ -502,25 +502,35 @@ function getPlayers(tab)
 				document.getElementById("online-" + playerList[player]).style.backgroundColor = "rgb(212, 212, 212)";
 			}
 
+			report = JSON.parse(target);
+
 			if (tab == "players")
 			{
-				target = target.split("*")[1];
-				target = target.split(", ");
-
-				for (let i = 0; i < target.length; i++)
+				if (report['status'] == "OFFLINE" || report['online'] == 0)
 				{
-					if (target[i] == "Server Offline" || target[i] == "None")
-					{
-						return;
-					}
+					return;
+				}
 
-					target[i]
-					document.getElementById("online-" + target[i]).style.backgroundColor = "rgb(40, 224, 23)";
+				for (let i = 0; i < report['players'].length; i++)
+				{
+					player = report['players'][i];
+					document.getElementById("online-" + player).style.backgroundColor = "rgb(40, 224, 23)";
 				}
 			}
 			else if (tab == "dashboard")
 			{
-				document.getElementById("player-count").innerHTML = "Player Count: " + target.split("*")[0];
+				let playerCount = null;
+
+				if (report['status'] == "OFFLINE")
+				{
+					playerCount = "Server Offline"
+				}
+				else
+				{
+					playerCount = report['online'] + " / " + report['max'];
+				}
+
+				document.getElementById("player-count").innerHTML = "Player Count: " + playerCount;
 			}
 		}
 	);
@@ -541,10 +551,10 @@ function getSystemStats()
 	requestData("systemStats",
 		function(target)
 		{
-			let data = target.split(" ");
-			document.getElementById("cpu-usage").innerHTML = "CPU Usage: " + data[0];
-			document.getElementById("linux-ram").innerHTML = "Machine RAM Usage: " + data[1];
-			document.getElementById("server-ip").innerHTML = "Server IP: " + data[2].trim() + ":" + serverPort;
+			let report = JSON.parse(target);
+			document.getElementById("cpu-usage").innerHTML = "CPU Usage: " + report['cpu'];
+			document.getElementById("linux-ram").innerHTML = "Machine RAM Usage: " + report['ram'];
+			document.getElementById("server-ip").innerHTML = "Server IP: " + report['ip'] + ":" + serverPort;
 		}
 	);
 }

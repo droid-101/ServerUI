@@ -61,7 +61,7 @@ function switchTab(name)
 					return;
 				}
 
-				target = target.split(",");
+				target = JSON.parse(target);
 
 				for (let i = 0; i < target.length; i++)
 				{
@@ -214,20 +214,19 @@ function getPlayers(tab)
 				document.getElementById("online-" + playerList[player]).style.backgroundColor = "rgb(212, 212, 212)";
 			}
 
+			report = JSON.parse(target);
+
 			if (tab == "players")
 			{
-				target = target.split("*")[1];
-				target = target.split(", ");
-
-				for (let i = 0; i < target.length; i++)
+				if (report['status'] == "OFFLINE" || report['online'] == 0)
 				{
-					if (target[i] == "Server Offline" || target[i] == "None")
-					{
-						return;
-					}
+					return;
+				}
 
-					target[i]
-					document.getElementById("online-" + target[i]).style.backgroundColor = "rgb(40, 224, 23)";
+				for (let i = 0; i < report['players'].length; i++)
+				{
+					player = report['players'][i];
+					document.getElementById("online-" + player).style.backgroundColor = "rgb(40, 224, 23)";
 				}
 			}
 		}
