@@ -8,6 +8,7 @@ var WebSocket = require('ws');
 
 const PRIVATE_PORT = 8080;
 const PUBLIC_PORT = 8000;
+const SHUTDOWN_DELAY_MS = 10000;   // Wait 10s before stopping server and shutting down
 
 var server = null;
 var error = false;
@@ -215,15 +216,23 @@ function requestHandler(request, response)
 				{
 					if (serverRunning())
 					{
-						console.log("Cannot shutdown: Server still running");
-						return;
+						serverCommand("/say The server is shutting down for the day");
+						serverCommand("/say All players will be disconnected in 10 seconds");
 					}
 
 					privateWebsite.close();
 					publicWebsite.close();
 
-					console.log("Shutting down Firestorm");
-					exec('sudo shutdown', function(error, stdout, stderr){ console.log(stdout); });
+					setTimeout(function()
+					{
+						stopServer();
+						console.log("Waiting for Minecraft server to stop");
+						while (serverRunning());
+						console.log("Shutting down Firestorm");
+						exec('sudo shutdown', function(error, stdout, stderr){ console.log(stdout); });
+						// The server will power off 1 minute after executing 'sudo shutdown'
+					}
+					, SHUTDOWN_DELAY_MS);
 				}
 			}
 		);
