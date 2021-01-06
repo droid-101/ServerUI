@@ -674,6 +674,26 @@ function serverRAM(response)
 	}
 }
 
+function IWillFindYou(response, serverType)
+{
+	fs.readFile("../repo/frontend/"+ serverType + "/pictures/IWillFindYou.png",
+		function(err, data)
+		{
+			if (err)
+			{
+				response.writeHead(404);
+			}
+			else
+			{
+				response.writeHead(404, {"Content-Type": "image/png"});
+				response.write(data);
+			}
+
+			response.end();
+		}
+	);
+}
+
 function getFrontendResource(target, response, serverType)
 {
 	let ext = path.extname(target);
@@ -685,14 +705,12 @@ function getFrontendResource(target, response, serverType)
 		{
 			if (err)
 			{
-				response.writeHead(404);
-			}
-			else
-			{
-				response.writeHead(200, {"Content-Type": type});
-				response.write(data);
+				IWillFindYou(response, serverType);
+				return;
 			}
 
+			response.writeHead(200, {"Content-Type": type});
+			response.write(data);
 			response.end();
 		}
 	);
