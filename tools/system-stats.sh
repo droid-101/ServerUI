@@ -2,18 +2,7 @@
 
 cpu_stats()
 {
-    local CPU=`mpstat | grep all`
-
-    i=0
-    for value in $CPU
-    do
-        i=$((i+1))
-        if [[ $i -eq 4 ]]
-        then
-            echo "$value"
-            return;
-        fi
-    done
+    echo `python3 ../repo/tools/cpu-stats.py`
 }
 
 ram_stats()
