@@ -8,7 +8,7 @@ var WebSocket = require('ws');
 
 const PRIVATE_PORT = 8080;
 const PUBLIC_PORT = 8000;
-const SHUTDOWN_DELAY_MS = 10000;   // Wait 10s before stopping server and shutting down
+const SHUTDOWN_DELAY_MS = 30000;   // Wait 10s before stopping server and shutting down
 
 var server = null;
 var error = false;
@@ -250,7 +250,7 @@ function requestHandler(request, response)
 					if (serverRunning())
 					{
 						serverCommand("/say The server is shutting down for the day");
-						serverCommand("/say All players will be disconnected in 10 seconds");
+						serverCommand("/say All players will be disconnected in " + (SHUTDOWN_DELAY_MS / 1000) + " seconds");
 					}
 
 					privateWebsite.close();
@@ -806,3 +806,4 @@ function sendTerminalOutput(data)
 
 	terminalSocket.send(data)
 }
+
