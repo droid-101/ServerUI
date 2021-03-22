@@ -1,0 +1,1 @@
+- Turn Wi-Fi power saving off by setting value to 2 in /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
