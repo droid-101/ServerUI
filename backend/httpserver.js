@@ -558,6 +558,9 @@ function restartServer()
 	}
 
 	stopServer();
+	console.log("Waiting for server to stop.");
+	
+	while (serverRunning());
 	startServer();
 }
 
