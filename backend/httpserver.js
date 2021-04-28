@@ -606,7 +606,7 @@ function setWorld(name)
 		return;
 	}
 
-	let setWorld = spawn('../repo/tools/set-world.sh', [name]);
+	let setWorld = spawn('../repo/tools/set-world.py', [name]);
 
 	setWorld.stdout.on('data',
 		function(data)
