@@ -6,6 +6,7 @@ After=network.target network-online.target
 Type=simple
 User=owner
 WorkingDirectory=/home/owner/files/mcserver/repo/backend
+Environment="MCSERVER=/home/owner/files/mcserver"
 ExecStart=/usr/bin/node httpserver.js
 Restart=on-failure
 
