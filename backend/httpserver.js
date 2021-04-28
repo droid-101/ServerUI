@@ -199,7 +199,7 @@ function requestHandler(request, response)
 						return;
 					}
 
-					let deleteWorld = spawn('../repo/tools/archive-world.sh', [body]);
+					let deleteWorld = spawn('../repo/tools/archive-world.py', [body]);
 
 					deleteWorld.stdout.on('data',
 						function(data)
