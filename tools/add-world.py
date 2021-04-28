@@ -9,20 +9,12 @@ from os import path
 def print_usage():
 	print("Usage: {} <world.zip>".format(path.basename(argv[0])))
 
-num_args = len(argv)
-
-if num_args < 2:
+if len(argv) != 2:
+	print("Incorrect arguments")
 	print("Please specify the new world zip file")
 	print("The zip file should be placed under the temp folder")
 	print_usage()
 	exit(1)
-
-if num_args > 2:
-	print("Too many arguments")
-	print_usage()
-	exit(1)
-
-print("================== SETTING WORLD ===================")
 
 mcserver = os.getenv("MCSERVER")
 temp = mcserver + "/temp/"
