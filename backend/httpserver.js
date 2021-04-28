@@ -405,7 +405,7 @@ function requestHandler(request, response)
 		}
 		else if (target == "/systemStats")
 		{
-			let stats = spawn('../repo/tools/system-stats.sh');
+			let stats = spawn('../repo/tools/system-stats.py');
 			let report = {
 				'cpu': -1,
 				'ram': -1,
@@ -559,7 +559,7 @@ function restartServer()
 
 	stopServer();
 	console.log("Waiting for server to stop.");
-	
+
 	while (serverRunning());
 	startServer();
 }
