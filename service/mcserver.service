@@ -5,7 +5,7 @@ After=network.target network-online.target
 [Service]
 Type=simple
 User=owner
-WorkingDirectory=/home/owner/mcserver/repo/backend
+WorkingDirectory=/home/owner/files/mcserver/repo/backend
 ExecStart=/usr/bin/node httpserver.js
 Restart=on-failure
 
