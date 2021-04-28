@@ -163,7 +163,9 @@ function requestHandler(request, response)
 						return;
 					}
 
-					fs.writeFile("../temp/world.zip", body,
+					fileName = request.headers['file-name']
+
+					fs.writeFile("../temp/" + fileName, body,
 						function(err)
 						{
 							if (err)
@@ -171,7 +173,7 @@ function requestHandler(request, response)
 								return console.log(err);
 							}
 
-							let addWorld = spawn('../repo/tools/add-world.sh');
+							let addWorld = spawn('../repo/tools/add-world.py', [fileName]);
 
 							addWorld.stdout.on('data',
 								function(data)

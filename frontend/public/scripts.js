@@ -137,6 +137,7 @@ function sendWorld(file)
 	request.timeout = 10000;
 	request.open("POST", generateURL("addWorld"));
 	request.setRequestHeader("Content-Type", "application/x-zip-compressed");
+	request.setRequestHeader("file-name", file.name);
 	request.send(file);
 }
 
