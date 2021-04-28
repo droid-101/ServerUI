@@ -27,14 +27,16 @@ mcserver = os.getenv("MCSERVER")
 world = mcserver + "/worlds/" + name
 shortcut = mcserver + "/server/world"
 
-if path.isdir(world):
-	print("\"{}\" exists".format(name))
-	if path.exists(shortcut):
-		os.remove(shortcut)
-	os.symlink(world, shortcut, target_is_directory=True)
-	print("Setting world to \"{}\"".format(name))
-else:
+if not path.isdir(world):
 	print("\"{}\" does not exist".format(name))
 	exit(1)
+
+print("\"{}\" exists".format(name))
+
+if path.exists(shortcut):
+	os.remove(shortcut)
+
+os.symlink(world, shortcut, target_is_directory=True)
+print("Set world to \"{}\"".format(name))
 
 print("================ WORLD HAS BEEN SET ================")
