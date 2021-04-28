@@ -8,15 +8,9 @@ from os import path
 def print_usage():
 	print("Usage: {} <world>".format(path.basename(argv[0])))
 
-num_args = len(argv)
-
-if num_args < 2:
+if len(argv) != 2:
+	print("Incorrect arguments")
 	print("Please specify a world name")
-	print_usage()
-	exit(1)
-
-if num_args > 2:
-	print("Only one argument is allowed")
 	print_usage()
 	exit(1)
 
@@ -33,7 +27,7 @@ if not path.isdir(world):
 
 print("\"{}\" exists".format(name))
 
-if path.exists(shortcut):
+if path.islink(shortcut):
 	os.remove(shortcut)
 
 os.symlink(world, shortcut, target_is_directory=True)
