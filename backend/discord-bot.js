@@ -27,12 +27,21 @@ module.exports = {
 
 	send_announcement: function(message)
 	{
+		if (announcements == null)
+		{
+			return;
+		}
+
 		announcements.send(message)
 	},
 
 	forward_chat: function(log)
 	{
-		//log = "[23:56:25] [Server thread/INFO]: <MonsterSlayer914> goodnight sdf sdf sdf sdf"
+		if (chat == null)
+		{
+			return;
+		}
+
 		tokens = log.split(' ');
 
 		if (!tokens[3].startsWith('<'))
