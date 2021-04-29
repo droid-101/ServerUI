@@ -5,10 +5,13 @@ var pidusage = require('pidusage');
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
 var WebSocket = require('ws');
+var DiscordBot = require('./discord-bot');
 
 const PRIVATE_PORT = 8080;
 const PUBLIC_PORT = 8000;
 const SHUTDOWN_DELAY_MS = 30000;   // Wait 10s before stopping server and shutting down
+
+const MCSERVER = process.env.MCSERVER
 
 var server = null;
 var error = false;
@@ -18,7 +21,25 @@ var terminalSocket = null;
 var streamTerminal= false;
 var backingUp = false;
 
-var contentTypes = {
+const PATHS = {
+	'server':    MCSERVER + "/server/",
+	'temp':      MCSERVER + "/temp/",
+	'archive':   MCSERVER + "/archive/",
+	'backups':   MCSERVER + "/backups/",
+	'worlds':    MCSERVER + "/worlds/",
+	'tools':     MCSERVER + "/repo/tools/",
+	'frontend':  MCSERVER + "/repo/frontend/",
+}
+
+const SCRIPTS = {
+	'add-world':       PATHS['tools'] + "add-world.py",
+	'archive-world':   PATHS['tools'] + "archive-world.py",
+	'backup-worlds':   PATHS['tools'] + "backup-worlds.py",
+	'set-world':       PATHS['tools'] + "set-world.py",
+	'system-stats':    PATHS['tools'] + "system-stats.py"
+}
+
+const CONTENT_TYPES = {
 	".css": "text/css",
 	".js": "text/javascript",
 	".png": "image/png"
@@ -39,7 +60,9 @@ const PRIVATE_REQUESTS = [
 	"/serverRAM"
 ]
 
-process.chdir("../../server");
+const RAM_FILE = PATHS['server'] + "ram.txt"
+
+process.chdir(PATHS['server']);
 
 var privateWebsite = http.createServer(requestHandler);
 openSocketServer();
@@ -47,6 +70,8 @@ privateWebsite.listen(PRIVATE_PORT);
 
 var publicWebsite = http.createServer(requestHandler)
 publicWebsite.listen(PUBLIC_PORT);
+
+DiscordBot.connect();
 
 function isPrivateRequest(target)
 {
@@ -115,7 +140,7 @@ function requestHandler(request, response)
 				}
 				else if (target == "/ram")
 				{
-					fs.writeFile("ram.txt", body,
+					fs.writeFile(RAM_FILE, body,
 						function(err)
 						{
 							if (err)
@@ -170,7 +195,7 @@ function requestHandler(request, response)
 
 					fileName = request.headers['file-name']
 
-					fs.writeFile("../temp/" + fileName, body,
+					fs.writeFile(PATHS['temp'] + fileName, body,
 						function(err)
 						{
 							if (err)
@@ -178,7 +203,7 @@ function requestHandler(request, response)
 								return console.log(err);
 							}
 
-							let addWorld = spawn('../repo/tools/add-world.py', [fileName]);
+							let addWorld = spawn(SCRIPTS['add-world'], [fileName]);
 
 							addWorld.stdout.on('data',
 								function(data)
@@ -204,7 +229,7 @@ function requestHandler(request, response)
 						return;
 					}
 
-					let deleteWorld = spawn('../repo/tools/archive-world.py', [body]);
+					let deleteWorld = spawn(SCRIPTS['archive-world'], [body]);
 
 					deleteWorld.stdout.on('data',
 						function(data)
@@ -234,7 +259,7 @@ function requestHandler(request, response)
 						return;
 					}
 
-					let backup = spawn('../repo/tools/backup-worlds.py');
+					let backup = spawn(SCRIPTS['backup-worlds']);
 					backingUp = true;
 
 					backup.stdout.on('data',
@@ -262,6 +287,7 @@ function requestHandler(request, response)
 
 					privateWebsite.close();
 					publicWebsite.close();
+					DiscordBot.disconnect();
 
 					setTimeout(function()
 					{
@@ -295,7 +321,7 @@ function requestHandler(request, response)
 
 		if (target == "/mcserver")
 		{
-			fs.readFile("../repo/frontend/" + serverType + "/structure.html",
+			fs.readFile(PATHS['frontend'] + serverType + "/structure.html",
 				function(err, data)
 				{
 					if (err)
@@ -360,7 +386,7 @@ function requestHandler(request, response)
 		}
 		else if (target == "/worlds")
 		{
-			let getWorlds = spawn('ls', ['-1', '../worlds']);
+			let getWorlds = spawn('ls', ['-1', PATHS['worlds']]);
 			let worlds = "";
 
 			getWorlds.stdout.on('data',
@@ -397,7 +423,7 @@ function requestHandler(request, response)
 		}
 		else if (target == "/ram")
 		{
-			fs.readFile("ram.txt",
+			fs.readFile(RAM_FILE,
 				function(err, data)
 				{
 					if (err)
@@ -418,7 +444,7 @@ function requestHandler(request, response)
 		}
 		else if (target == "/systemStats")
 		{
-			let stats = spawn('../repo/tools/system-stats.py');
+			let stats = spawn(SCRIPTS['system-stats']);
 			let report = {
 				'cpu': -1,
 				'ram': -1,
@@ -503,7 +529,7 @@ function startServer()
 
 	let ram;
 
-	fs.readFile("ram.txt",
+	fs.readFile(RAM_FILE,
 		function(err, data)
 		{
 			if (err)
@@ -522,8 +548,8 @@ function startServer()
 				commandOutput = (`${data}`);
 				console.log(commandOutput);
 				sendTerminalOutput(commandOutput);
+				DiscordBot.forward_chat(commandOutput)
 			});
-
 
 			server.stderr.on('data', (data) => {
 			console.error(`${data}`);
@@ -619,7 +645,7 @@ function setWorld(name)
 		return;
 	}
 
-	let setWorld = spawn('../repo/tools/set-world.py', [name]);
+	let setWorld = spawn(SCRIPTS['set-world'], [name]);
 
 	setWorld.stdout.on('data',
 		function(data)
@@ -740,7 +766,7 @@ function serverRAM(response)
 
 function IWillFindYou(response, serverType)
 {
-	fs.readFile("../repo/frontend/" + serverType + "/pictures/IWillFindYou.png",
+	fs.readFile(PATHS['frontend'] + serverType + "/pictures/IWillFindYou.png",
 		function(err, data)
 		{
 			if (err)
@@ -760,7 +786,7 @@ function IWillFindYou(response, serverType)
 
 function BabyYoda(response, serverType)
 {
-	fs.readFile("../repo/frontend/" + serverType + "/pictures/BabyYoda.png",
+	fs.readFile(PATHS['frontend'] + serverType + "/pictures/BabyYoda.png",
 		function(err, data)
 		{
 			if (err)
@@ -781,8 +807,8 @@ function BabyYoda(response, serverType)
 function getFrontendResource(target, response, serverType)
 {
 	let ext = path.extname(target);
-	let type = contentTypes[ext];
-	let filePath = "../repo/frontend/"+ serverType + target;
+	let type = CONTENT_TYPES[ext];
+	let filePath = PATHS['frontend'] + serverType + target;
 
 	fs.readFile(filePath,
 		function(err, data)
@@ -836,7 +862,6 @@ function sendTerminalOutput(data)
 {
 	if (!streamTerminal)
 	{
-		console.log("Server terminal streaming disabled")
 		return;
 	}
 
