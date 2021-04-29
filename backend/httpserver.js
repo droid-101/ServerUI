@@ -21,6 +21,7 @@ var socketServer = null;
 var terminalSocket = null;
 var streamTerminal= false;
 var backingUp = false;
+var deletingWorld = false;
 
 const PATHS = {
 	'server':    MCSERVER + "/server/",
@@ -118,9 +119,9 @@ function requestHandler(request, response)
 			return;   // deny any unauthorized requests
 		}
 
-		if (backingUp)
+		if (backingUp || deletingWorld)
 		{
-			return;   // deny requests during a backup
+			return;   // deny requests during a backup or world deletion
 		}
 
 		request.on('data', (chunk) => {body.push(chunk)});
@@ -237,7 +238,14 @@ function requestHandler(request, response)
 						return;
 					}
 
+					if (deletingWorld)
+					{
+						console.log("A world deletion is already in progress");
+						return;
+					}
+
 					let deleteWorld = spawn(SCRIPTS['archive-world'], [body]);
+					deletingWorld = true;
 
 					deleteWorld.stdout.on('data',
 						function(data)
@@ -249,6 +257,7 @@ function requestHandler(request, response)
 					deleteWorld.on('close',
 						function(code)
 						{
+							deletingWorld = false;
 							console.log("Attempted to archive world")
 						}
 					);
@@ -321,9 +330,9 @@ function requestHandler(request, response)
 			return;
 		}
 
-		if (backingUp)
+		if (backingUp || deletingWorld)
 		{
-			BabyYoda(response, serverType);   // deny requests during a backup
+			BabyYoda(response, serverType);   // deny requests during a backup or world deletion
 			return;
 		}
 
