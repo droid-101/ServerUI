@@ -85,6 +85,11 @@ function requestHandler(request, response)
 			return;   // deny any unauthorized requests
 		}
 
+		if (backingUp)
+		{
+			return;   // deny requests during a backup
+		}
+
 		request.on('data', (chunk) => {body.push(chunk)});
 		request.on('end',
 			function()
@@ -229,7 +234,7 @@ function requestHandler(request, response)
 						return;
 					}
 
-					let backup = spawn('../repo/tools/backup-worlds.sh');
+					let backup = spawn('../repo/tools/backup-worlds.py');
 					backingUp = true;
 
 					backup.stdout.on('data',
@@ -279,6 +284,12 @@ function requestHandler(request, response)
 		if (serverType == "public" && isPrivateRequest(target))
 		{
 			IWillFindYou(response, serverType);   // deny any unauthorized requests
+			return;
+		}
+
+		if (backingUp)
+		{
+			BabyYoda(response, serverType);   // deny requests during a backup
 			return;
 		}
 
@@ -729,7 +740,27 @@ function serverRAM(response)
 
 function IWillFindYou(response, serverType)
 {
-	fs.readFile("../repo/frontend/"+ serverType + "/pictures/IWillFindYou.png",
+	fs.readFile("../repo/frontend/" + serverType + "/pictures/IWillFindYou.png",
+		function(err, data)
+		{
+			if (err)
+			{
+				response.writeHead(404);
+			}
+			else
+			{
+				response.writeHead(404, {"Content-Type": "image/png"});
+				response.write(data);
+			}
+
+			response.end();
+		}
+	);
+}
+
+function BabyYoda(response, serverType)
+{
+	fs.readFile("../repo/frontend/" + serverType + "/pictures/BabyYoda.png",
 		function(err, data)
 		{
 			if (err)
