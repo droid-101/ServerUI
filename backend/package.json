@@ -4,6 +4,8 @@
   "description": "",
   "main": "httpserver.js",
   "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
     "pidusage": "^2.0.21",
     "ws": "^7.3.1"
   },
