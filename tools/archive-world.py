@@ -25,14 +25,14 @@ os.chdir(worlds)
 world = str(argv[1])
 
 if not path.isdir(world):
-    print("The world \"{}\" does not exist".format(world))
+    print("The world '{}' does not exist".format(world))
     exit(1)
 
 print("=============== BEGINNING ARCHIVING ================")
 
 deleted = "{}.deleted.zip".format(world)
 
-os.system("zip -r \"{}\" \"{}\"".format(deleted, world))
+os.system("zip -r '{}' '{}'".format(deleted, world))
 shutil.rmtree(world)
 
 destination = mcserver + "/archive/" + deleted

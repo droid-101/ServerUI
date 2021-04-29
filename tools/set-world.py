@@ -22,15 +22,15 @@ world = mcserver + "/worlds/" + name
 shortcut = mcserver + "/server/world"
 
 if not path.isdir(world):
-	print("\"{}\" does not exist".format(name))
+	print("'{}' does not exist".format(name))
 	exit(1)
 
-print("\"{}\" exists".format(name))
+print("'{}' exists".format(name))
 
 if path.islink(shortcut):
 	os.remove(shortcut)
 
 os.symlink(world, shortcut, target_is_directory=True)
-print("Set world to \"{}\"".format(name))
+print("Set world to '{}'".format(name))
 
 print("================ WORLD HAS BEEN SET ================")

@@ -23,7 +23,7 @@ zip_file = str(argv[1])
 os.chdir(temp)
 
 if not path.isfile(zip_file):
-	print("\"{}\" does not exist".format(zip_file))
+	print("'{}' does not exist".format(zip_file))
 	exit(1)
 
 print("=============== ADDING WORLD ===============")
@@ -32,13 +32,13 @@ shutil.move(zip_file, "../")
 os.system("rm -rf *")
 shutil.move("../" + zip_file, ".")
 
-os.system("unzip \"{}\"".format(zip_file))
+os.system("unzip '{}'".format(zip_file))
 os.remove(zip_file)
 
 name = zip_file.removesuffix('.zip')
 
 if not path.isdir(name):
-	print("The zip file did not contain a folder named \"{}\"".format(name))
+	print("The zip file did not contain a folder named '{}'".format(name))
 	os.system("rm -rf *")
 	exit(1)
 
@@ -49,11 +49,11 @@ os.rename(name, world)
 destination = mcserver + "/worlds/" + world
 
 if path.exists(destination):
-	print("The world \"{}\" already exists".format(world))
+	print("The world '{}' already exists".format(world))
 	os.system("rm -rf *")
 	exit(1)
 
-print("Adding world \"{}\"".format(world))
+print("Adding world '{}'".format(world))
 shutil.move(world, destination)
 os.system("rm -rf *")
 
