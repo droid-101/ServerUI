@@ -6,7 +6,7 @@ const MCSERVER = process.env.MCSERVER
 const LOGS_FILE = MCSERVER + "/server/logs/latest.txt"
 
 CHANNEL_IDS = {
-	'announcements': "837330937569607720",
+	'announcements': "837407841220165652",
 	'chat': "837391785768255488"
 }
 
