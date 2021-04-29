@@ -1,11 +1,12 @@
-var http = require("http");
-var fs = require("fs");
-var path = require('path');
-var pidusage = require('pidusage');
-var spawn = require('child_process').spawn;
-var exec = require('child_process').exec;
-var WebSocket = require('ws');
-var DiscordBot = require('./discord-bot');
+const http = require("http");
+const fs = require("fs");
+const path = require('path');
+const pidusage = require('pidusage');
+const spawn = require('child_process').spawn;
+const exec = require('child_process').exec;
+const WebSocket = require('ws');
+const DiscordBot = require('./discord-bot');
+const util = require('util');
 
 const PRIVATE_PORT = 8080;
 const PUBLIC_PORT = 8000;
@@ -39,6 +40,14 @@ const SCRIPTS = {
 	'system-stats':    PATHS['tools'] + "system-stats.py"
 }
 
+const FILES = {
+	'server.properties':   PATHS['server'] + "server.properties",
+	'whitelist.json':      PATHS['server'] + "whitelist.json",
+	'ops.json':            PATHS['server'] + "ops.json",
+	'ram.txt':             PATHS['server'] + "ram.txt",
+	'ip.txt':              PATHS['server'] + "ip.txt"
+}
+
 const CONTENT_TYPES = {
 	".css": "text/css",
 	".js": "text/javascript",
@@ -60,8 +69,6 @@ const PRIVATE_REQUESTS = [
 	"/serverRAM"
 ]
 
-const RAM_FILE = PATHS['server'] + "ram.txt"
-
 process.chdir(PATHS['server']);
 
 var privateWebsite = http.createServer(requestHandler);
@@ -72,6 +79,7 @@ var publicWebsite = http.createServer(requestHandler)
 publicWebsite.listen(PUBLIC_PORT);
 
 DiscordBot.connect();
+checkIP();
 
 function isPrivateRequest(target)
 {
@@ -140,7 +148,7 @@ function requestHandler(request, response)
 				}
 				else if (target == "/ram")
 				{
-					fs.writeFile(RAM_FILE, body,
+					fs.writeFile(FILES['ram.txt'], body,
 						function(err)
 						{
 							if (err)
@@ -154,7 +162,7 @@ function requestHandler(request, response)
 				{
 					let properties = JSONtoProperties(body);
 
-					fs.writeFile("server.properties", properties,
+					fs.writeFile(FILES['server.properties'], properties,
 						function(err)
 						{
 							if (err)
@@ -337,7 +345,7 @@ function requestHandler(request, response)
 		}
 		else if (target == "/properties")
 		{
-			fs.readFile("server.properties",
+			fs.readFile(FILES['server.properties'],
 				function(err, data)
 				{
 					if (err)
@@ -354,7 +362,7 @@ function requestHandler(request, response)
 		}
 		else if (target == "/whitelist")
 		{
-			fs.readFile("whitelist.json",
+			fs.readFile(FILES['whitelist.json'],
 				function(err, data)
 				{
 					if (err)
@@ -370,7 +378,7 @@ function requestHandler(request, response)
 		}
 		else if (target == "/ops")
 		{
-			fs.readFile("ops.json",
+			fs.readFile(FILES['ops.json'],
 				function(err, data)
 				{
 					if (err)
@@ -423,7 +431,7 @@ function requestHandler(request, response)
 		}
 		else if (target == "/ram")
 		{
-			fs.readFile(RAM_FILE,
+			fs.readFile(FILES['ram.txt'],
 				function(err, data)
 				{
 					if (err)
@@ -529,7 +537,7 @@ function startServer()
 
 	let ram;
 
-	fs.readFile(RAM_FILE,
+	fs.readFile(FILES['ram.txt'],
 		function(err, data)
 		{
 			if (err)
@@ -868,3 +876,59 @@ function sendTerminalOutput(data)
 	terminalSocket.send(data)
 }
 
+function checkIP()
+{
+	fs.readFile(FILES['ip.txt'], function(err, data)
+	{
+		if (err)
+		{
+			throw err;
+		}
+
+		existing = data.toString().trim();
+
+		let stats = spawn(SCRIPTS['system-stats']);
+
+		stats.stdout.on('data', function(data)
+		{
+			data = data.toString().split(' ');
+			newest = data[2].trim()
+
+			console.log("The existing IP address is: " + existing);
+			console.log("The newest IP address is: " + newest);
+
+			if (existing === newest)
+			{
+				console.log("The IP address has not changed from '%s'", existing);
+				return;
+			}
+
+			console.log("The IP address has changed from '%s' to '%s'", existing, newest);
+
+			fs.writeFile(FILES['ip.txt'], newest, function(err)
+			{
+				if (err)
+				{
+					return console.log(err);
+				}
+
+				console.log("Updated the saved IP");
+				console.log("The new IP will be posted on Discord");
+
+				fs.readFile(FILES['server.properties'], function(err, data)
+				{
+					if (err)
+					{
+						throw err;
+					}
+
+					properties = JSON.parse(propertiesToJSON(data.toString()))
+
+					DiscordBot.send_announcement(util.format("The IP address has changed to `%s`", newest));
+					DiscordBot.send_announcement(util.format("Server IP: `%s:%s`", newest, properties['server-port']));
+					DiscordBot.send_announcement(util.format("Website URL: `http://%s:%d/mcserver`", newest, PUBLIC_PORT));
+				});
+			});
+		});
+	});
+}

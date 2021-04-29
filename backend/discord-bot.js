@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 require('dotenv').config();
-var fs = require("fs");
 const client = new Discord.Client();
 
 const MCSERVER = process.env.MCSERVER
