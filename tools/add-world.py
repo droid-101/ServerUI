@@ -35,10 +35,16 @@ shutil.move("../" + zip_file, ".")
 os.system("unzip \"{}\"".format(zip_file))
 os.remove(zip_file)
 
-original = os.listdir()[0]
-world = original.replace("\'", "")
+name = zip_file.removesuffix('.zip')
+
+if not path.isdir(name):
+	print("The zip file did not contain a folder named \"{}\"".format(name))
+	os.system("rm -rf *")
+	exit(1)
+
+world = name.replace("\'", "")
 world = world.replace("\"", "")
-os.rename(original, world)
+os.rename(name, world)
 
 destination = mcserver + "/worlds/" + world
 
