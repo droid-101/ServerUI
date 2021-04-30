@@ -1,6 +1,7 @@
 [Unit]
 Description=Headless Minecraft Server
 After=network.target network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
