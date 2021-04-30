@@ -570,9 +570,11 @@ function getStats()
 
 function terminalPrint(data)
 {
-	var console = document.getElementById("terminal-window");
-	console.innerHTML += data + "<br/>";
-	console.scrollTop = console.scrollHeight;
+	var terminal = document.getElementById("terminal-window");
+	data = data.replace("<", "&lt");
+	data = data.replace(">", "&gt");
+	terminal.innerHTML += data + "<br/>";
+	terminal.scrollTop = terminal.scrollHeight;
 }
 
 function terminalSend(data)
