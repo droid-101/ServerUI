@@ -29,6 +29,7 @@ module.exports = {
 	{
 		if (announcements == null)
 		{
+			console.log("The announcements channel was not acquired")
 			return;
 		}
 
@@ -39,6 +40,7 @@ module.exports = {
 	{
 		if (chat == null)
 		{
+			console.log("The chat channel was not acquired")
 			return;
 		}
 
