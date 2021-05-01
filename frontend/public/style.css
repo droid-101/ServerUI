@@ -160,6 +160,32 @@ html body
 	top: 90px;
 }
 
+.load
+{
+	position: fixed;
+	bottom: 0%;
+	z-index: 101;
+	background-color: black;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.logo
+{
+	width: 25%;
+}
+
+.loading
+{
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 250%;
+	font-weight: 1000;
+	color: white;
+}
+
 .slideshow
 {
 	background-color: black;

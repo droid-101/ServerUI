@@ -288,6 +288,7 @@ function init()
 {
 	switchTab("home");
 	document.getElementById("pic0").style.display = "block";
+	document.getElementById("load").style.display = "none";
 	getStatus();
 	setInterval(getStatus, 30000);
 }
