@@ -693,7 +693,8 @@ function shutdown()
 function init()
 {
 	switchTab("home");
-	document.getElementById("pic0").style.display = "block"
+	document.getElementById("pic0").style.display = "block";
+	document.getElementById("load").style.display = "none";
 	getStats();
 	getStatus();
 	setInterval(getStatus, 30000);
