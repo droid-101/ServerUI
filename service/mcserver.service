@@ -8,6 +8,7 @@ Type=simple
 User=owner
 WorkingDirectory=/home/owner/files/mcserver/repo/backend
 Environment="MCSERVER=/home/owner/files/mcserver"
+ExecStartPre=/usr/bin/sudo /usr/bin/iw wlp0s20f3 set power_save off
 ExecStart=/usr/bin/node httpserver.js
 Restart=on-failure
 
