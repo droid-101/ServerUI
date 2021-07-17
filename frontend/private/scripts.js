@@ -332,6 +332,7 @@ function toggleAdd()
 		addingPlayer = true;
 		document.getElementById("addPlayer").style.backgroundColor = "red";
 		document.getElementById("addPlayer").innerHTML = "CANCEL";
+		document.getElementById("addPlayer").style.width = "130px";
 		document.getElementById("savePlayers").style.display = "inline";
 	}
 	else
@@ -339,6 +340,7 @@ function toggleAdd()
 		addingPlayer = false;
 		document.getElementById("addPlayer").style.backgroundColor = "rgb(55, 168, 55)";
 		document.getElementById("addPlayer").innerHTML = "+";
+		document.getElementById("addPlayer").style.width = "40px";
 		document.getElementById("newPlayer").style.display = "none";
 		document.getElementById("savePlayers").style.display = "none";
 	}

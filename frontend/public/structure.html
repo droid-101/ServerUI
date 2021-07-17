@@ -66,20 +66,23 @@
 
 		<div class='tab' id='players'>
 			<p class="subtitle">
-				PLAYERS
+				<span class="menu-side-text">
+					PLAYERS
+				</span>
 			</p>
-			<div>
-			</div>
-			<div id="whitelist" class="whitelist">
-			</div>
+			<span class="menu-side-text">
+				<div id="whitelist" class="whitelist">
+				</div>
+			</span>
 
 			<br>
 		</div>
 
 		<div class='tab' id='worlds'>
 			<p class="subtitle">
-				WORLDS
-
+				<span class="menu-side-text">
+					WORLDS
+				</span>
 				<span>
 					<button class="add" id="add" title="Add World" onclick="triggerUpload()">+</button>
 				</span>
@@ -87,11 +90,13 @@
 					<input type="file" title="Add World" class="addWorld" id="addWorld" accept="application/x-zip-compressed" oninput="addWorld(files)">
 				</span>
 			</p>
-			<div>
-				<p class="note">Note: The server must be offline to change a world.</p>
-			</div>
-			<div id="world-list" class="world-list">
-			</div>
+			<span class="menu-side-text">
+				<div>
+					<p class="note">Note: The server must be offline to change a world.</p>
+				</div>
+				<div id="world-list" class="world-list">
+				</div>
+			</span>
 		</div>
 	</div>
 </body>

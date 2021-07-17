@@ -33,7 +33,7 @@ html body
 	z-index: 1;
 	width: 100%;
 	text-align: right;
-	position: relative; right: 45px;
+	position: relative; right: 20px;
 }
 
 .buttons
@@ -115,14 +115,20 @@ html body
 
 .subtitle
 {
-	font-size: 40pt;
-	font-family: monospace;
-	font-weight: bold;
-	width: 78%;
-	position: relative; left: 250px;
+	width: 100%;	
 	padding: 0px;
 	margin-top: 30px;
 	margin-bottom: 0px;
+	font-size: 40pt;
+}
+
+.menu-side-text
+{
+	
+	font-family: monospace;
+	font-weight: bold;
+	position: relative;
+	left: 250px;
 }
 
 .note
@@ -136,7 +142,7 @@ html body
 	font-family: monospace;
 	font-weight: 700;
 	width: 100%;
-	position: relative; left: 250px;
+	position: relative;
 }
 
 .tab
@@ -246,7 +252,7 @@ html body
 	margin-top: 10px;
 	margin-left: 10px;
 	position: relative;
-	right: 2px;
+	right: 20px;
 }
 
 .edit
@@ -272,6 +278,8 @@ html body
 .add
 {
 	background-color: rgb(55, 168, 55);
+	width: 40px;
+	height: 40px;
 }
 
 .remove
@@ -318,6 +326,7 @@ html body
 	font-weight: 900;
 	border-radius: 10px;
 	position: relative;
+	right: 270px;
 	top: -1px;
 }
 
@@ -330,17 +339,17 @@ html body
 	position: relative;
 	border-radius: 15px;
 	top: 8px;
-	right: 30px;
+	right: 280px;
 }
 
 .whitelist
 {
-	width: 78%;
+	width: 100%;
 }
 
 .world-list
 {
-	width: 78%;
+	width: 100%;
 }
 
 .world
@@ -365,6 +374,7 @@ html body
 .switch
 {
 	position: relative;
+	right: 255px;
 	width: 50px;
 	height: 30px;
 	float: right;
